@@ -41,7 +41,12 @@ def seed_service_types():
 def seed_admin_user():
     db = SessionLocal()
     try:
-        # Create superuser if it doesn't exist
+        # Clean up old demo users
+        old_demo_ids = ["SM001", "SM002", "SM003", "SM004", "SM005"]
+        for emp_id in old_demo_ids:
+            db.query(User).filter(User.employee_id == emp_id).delete()
+        
+        # Create superuser
         superuser_id = "SM000"
         existing = db.query(User).filter(User.employee_id == superuser_id).first()
         
@@ -56,10 +61,11 @@ def seed_admin_user():
                 is_active=True,
             )
             db.add(superuser)
-            db.commit()
             logger.info(f"✓ Created superuser: {superuser_id} (D S Reddy)")
         else:
             logger.info(f"✓ Superuser {superuser_id} already exists")
+        
+        db.commit()
             
     except Exception as e:
         db.rollback()
