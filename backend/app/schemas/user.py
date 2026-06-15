@@ -7,11 +7,9 @@ from ..models.user import UserRole
 
 
 class UserCreate(BaseModel):
-    employee_id: str
     name: str
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
-    password: str
     role: UserRole = UserRole.TECHNICIAN
 
 

@@ -16,11 +16,9 @@ const ROLE_STYLES = {
 
 function UserForm({ onSave, onClose, existing }) {
   const [form, setForm] = useState({
-    employee_id: existing?.employee_id || "",
     name: existing?.name || "",
     email: existing?.email || "",
     phone: existing?.phone || "",
-    password: "",
     role: existing?.role || "technician",
   });
   const [saving, setSaving] = useState(false);
@@ -52,23 +50,11 @@ function UserForm({ onSave, onClose, existing }) {
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
       </div>
       {!existing && (
-        <>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Employee ID *</label>
-            <input required value={form.employee_id} onChange={(e) => set("employee_id", e.target.value.toUpperCase())}
-              placeholder="e.g. SM006" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 font-mono uppercase" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" value={form.email} onChange={(e) => set("email", e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Password *</label>
-            <input required type="password" value={form.password} onChange={(e) => set("password", e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
-          </div>
-        </>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
+          <input type="email" value={form.email} onChange={(e) => set("email", e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
       )}
       <div>
         <label className="block text-xs font-medium text-gray-700 mb-1">Phone</label>
@@ -82,6 +68,11 @@ function UserForm({ onSave, onClose, existing }) {
           {ROLES.map((r) => <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>)}
         </select>
       </div>
+      {!existing && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700">
+          ℹ️ Employee ID (SMXXX) and password will be auto-generated. Default password = phone number.
+        </div>
+      )}
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex gap-2 pt-2">
         <button type="button" onClick={onClose} className="flex-1 border rounded-lg py-2 text-sm text-gray-600">Cancel</button>

@@ -29,15 +29,28 @@ def create_user(
     db: Session = Depends(get_db),
     _: User = Depends(require_roles(UserRole.ADMIN)),
 ):
-    if db.query(User).filter(User.employee_id == body.employee_id.upper()).first():
-        raise HTTPException(status_code=400, detail="Employee ID already exists")
+    # Auto-generate Employee ID (next SMXXX number)
+    last_user = db.query(User).filter(User.employee_id.like('SM%')).order_by(User.id.desc()).first()
+    next_num = 1
+    if last_user:
+        try:
+            current_num = int(last_user.employee_id[2:])
+            next_num = current_num + 1
+        except ValueError:
+            next_num = 1
+    employee_id = f"SM{next_num:03d}"
+
+    # Use phone as default password
+    password = body.phone or "Password@123"
+
     user = User(
-        employee_id=body.employee_id.upper(),
+        employee_id=employee_id,
         name=body.name,
         email=body.email,
         phone=body.phone,
-        password_hash=hash_password(body.password),
+        password_hash=hash_password(password),
         role=body.role,
+        is_active=True,
     )
     db.add(user)
     db.commit()
