@@ -25,14 +25,6 @@ SERVICE_TYPES = [
     ("Weed Control",                  "Specialized Treatments"),
 ]
 
-SEED_USERS = [
-    ("SM001", "Admin",        "admin@servicemonks.com",   None,         "Admin@123",  UserRole.ADMIN),
-    ("SM002", "Manager",      "manager@servicemonks.com", "9000000002", "Manager@123", UserRole.MANAGER),
-    ("SM003", "Suresh Patil", "suresh@servicemonks.com",  "9111111111", "Tech@123",   UserRole.TECHNICIAN),
-    ("SM004", "Deepak Kumar", "deepak@servicemonks.com",  "9222222222", "Tech@123",   UserRole.TECHNICIAN),
-    ("SM005", "Manoj Singh",  "manoj@servicemonks.com",   "9333333333", "Tech@123",   UserRole.TECHNICIAN),
-]
-
 
 def seed_service_types():
     db = SessionLocal()
@@ -41,7 +33,7 @@ def seed_service_types():
             for name, category in SERVICE_TYPES:
                 db.add(ServiceType(name=name, category=category))
             db.commit()
-            logger.info(f"Created {len(SERVICE_TYPES)} service types")
+            logger.info(f"✓ Created {len(SERVICE_TYPES)} service types")
     finally:
         db.close()
 
@@ -49,31 +41,29 @@ def seed_service_types():
 def seed_admin_user():
     db = SessionLocal()
     try:
-        created_count = 0
-        for emp_id, name, email, phone, pwd, role in SEED_USERS:
-            existing = db.query(User).filter(User.employee_id == emp_id).first()
-            if not existing:
-                user = User(
-                    employee_id=emp_id,
-                    name=name,
-                    email=email,
-                    phone=phone,
-                    password_hash=hash_password(pwd),
-                    role=role,
-                    is_active=True,
-                )
-                db.add(user)
-                created_count += 1
-                logger.info(f"Seeding user: {emp_id}")
+        # Create superuser if it doesn't exist
+        superuser_id = "SM000"
+        existing = db.query(User).filter(User.employee_id == superuser_id).first()
         
-        if created_count > 0:
+        if not existing:
+            superuser = User(
+                employee_id=superuser_id,
+                name="D S Reddy",
+                email="superuser@servicemonks.com",
+                phone=None,
+                password_hash=hash_password("Anupally@123"),
+                role=UserRole.ADMIN,
+                is_active=True,
+            )
+            db.add(superuser)
             db.commit()
-            logger.info(f"Successfully created {created_count} users")
+            logger.info(f"✓ Created superuser: {superuser_id} (D S Reddy)")
         else:
-            logger.info("All users already exist")
+            logger.info(f"✓ Superuser {superuser_id} already exists")
+            
     except Exception as e:
         db.rollback()
-        logger.error(f"Error seeding users: {e}", exc_info=True)
+        logger.error(f"Error seeding superuser: {e}", exc_info=True)
         raise
     finally:
         db.close()
