@@ -2,6 +2,9 @@ from ..database import SessionLocal
 from ..models.service import ServiceType
 from ..models.user import User, UserRole
 from .auth import hash_password
+import logging
+
+logger = logging.getLogger(__name__)
 
 SERVICE_TYPES = [
     ("Rodent Control",                "Rodent & Pest Control"),
@@ -38,6 +41,7 @@ def seed_service_types():
             for name, category in SERVICE_TYPES:
                 db.add(ServiceType(name=name, category=category))
             db.commit()
+            logger.info(f"Created {len(SERVICE_TYPES)} service types")
     finally:
         db.close()
 
@@ -45,9 +49,11 @@ def seed_service_types():
 def seed_admin_user():
     db = SessionLocal()
     try:
+        created_count = 0
         for emp_id, name, email, phone, pwd, role in SEED_USERS:
-            if not db.query(User).filter(User.employee_id == emp_id).first():
-                db.add(User(
+            existing = db.query(User).filter(User.employee_id == emp_id).first()
+            if not existing:
+                user = User(
                     employee_id=emp_id,
                     name=name,
                     email=email,
@@ -55,10 +61,19 @@ def seed_admin_user():
                     password_hash=hash_password(pwd),
                     role=role,
                     is_active=True,
-                ))
-        db.commit()
+                )
+                db.add(user)
+                created_count += 1
+                logger.info(f"Seeding user: {emp_id}")
+        
+        if created_count > 0:
+            db.commit()
+            logger.info(f"Successfully created {created_count} users")
+        else:
+            logger.info("All users already exist")
     except Exception as e:
         db.rollback()
+        logger.error(f"Error seeding users: {e}", exc_info=True)
         raise
     finally:
         db.close()
