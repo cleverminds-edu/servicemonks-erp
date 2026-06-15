@@ -45,8 +45,8 @@ def seed_service_types():
 def seed_admin_user():
     db = SessionLocal()
     try:
-        if db.query(User).count() == 0:
-            for emp_id, name, email, phone, pwd, role in SEED_USERS:
+        for emp_id, name, email, phone, pwd, role in SEED_USERS:
+            if not db.query(User).filter(User.employee_id == emp_id).first():
                 db.add(User(
                     employee_id=emp_id,
                     name=name,
@@ -54,8 +54,11 @@ def seed_admin_user():
                     phone=phone,
                     password_hash=hash_password(pwd),
                     role=role,
+                    is_active=True,
                 ))
-            db.commit()
-            print("Seeded users: SM001–SM005 | Passwords: Admin@123 / Manager@123 / Tech@123")
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise
     finally:
         db.close()
