@@ -137,7 +137,7 @@ def startup():
         seed_admin_user()
         logger.info("✓ Seed data initialized")
     except Exception as e:
-        logger.warning(f"Seed data initialization warning: {str(e)}")
+        logger.error(f"Seed data initialization failed: {type(e).__name__}: {str(e)}", exc_info=True)
 
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
