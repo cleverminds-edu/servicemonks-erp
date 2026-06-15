@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Service Monks Integrated Solutions Private Limited – Your Pest Management Partner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+/* ─── variables ─────────────────────────────────── */
+:root{
+  --amber:#F59E0B;
+  --amber-d:#D97706;
+  --black:#111111;
+  --dark:#1F2937;
+  --cream:#FAFAF7;
+  --white:#FFFFFF;
+  --muted:#6B7280;
+  --border:#E5E7EB;
+  --r:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;color:var(--dark);background:var(--white);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.pad{padding:96px 0}
+
+/* ─── type ───────────────────────────────────────── */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--amber);margin-bottom:18px;
+}
+.eyebrow::before{display:none}
+h1,h2,h3,h4{line-height:1.15;font-weight:800}
+.h-xl{font-size:clamp(44px,5.5vw,76px);color:var(--white);letter-spacing:-1.5px}
+.h-xl em{font-style:normal;color:var(--amber)}
+.h-lg{font-size:clamp(32px,4vw,52px);color:var(--dark);letter-spacing:-1px}
+.h-lg em{font-style:normal;color:var(--amber)}
+.h-md{font-size:clamp(22px,2.5vw,32px);color:var(--dark);font-weight:700}
+.body-txt{font-size:16px;line-height:1.85;color:var(--muted)}
+.body-sm{font-size:14px;line-height:1.8;color:var(--muted)}
+
+/* ─── buttons ───────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;padding:14px 30px;border-radius:50px;cursor:pointer;border:none;transition:.25s}
+.btn-amber{background:var(--amber);color:var(--black)}
+.btn-amber:hover{background:var(--amber-d);box-shadow:0 8px 28px rgba(245,158,11,.4);transform:translateY(-2px)}
+.btn-ghost{background:transparent;border:2px solid rgba(255,255,255,.4);color:var(--white)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-dark{background:var(--dark);color:var(--white)}
+.btn-dark:hover{background:var(--black);transform:translateY(-2px)}
+
+/* ─── reveal ─────────────────────────────────────── */
+[data-rev]{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+[data-rev].vis{opacity:1;transform:none}
+[data-rev="l"]{transform:translateX(-24px)}
+[data-rev="r"]{transform:translateX(24px)}
+[data-rev="l"].vis,[data-rev="r"].vis{transform:none}
+
+/* ══════════════════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════════════════ */
+.topbar{background:var(--amber);padding:8px 0;text-align:center;font-size:13px;font-weight:600;color:var(--black)}
+.topbar a{color:var(--black);font-weight:700;margin:0 8px}
+
+/* ══════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════ */
+#nav{position:sticky;top:0;z-index:1000;background:var(--white);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+#nav.up{box-shadow:0 4px 24px rgba(0,0,0,.07)}
+.nav-row{display:flex;align-items:center;height:72px;gap:20px}
+.logo-box{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.logo-box img{width:52px;height:52px;object-fit:contain;border-radius:10px;background:#fff;padding:3px;border:2px solid #f3f4f6}
+.logo-name b{display:block;font-size:16px;font-weight:800;color:var(--black);letter-spacing:-.3px}
+.logo-name small{font-size:10px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:.8px}
+.nav-links{display:flex;align-items:center;gap:2px;list-style:none;margin:0 auto}
+.nav-links a{font-size:13px;font-weight:500;color:var(--muted);padding:8px 14px;border-radius:8px;transition:.2s;white-space:nowrap}
+.nav-links a:hover{color:var(--black);background:var(--cream)}
+.nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.nav-tel{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap}
+.nav-tel i{color:var(--amber);margin-right:6px}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:.3s}
+
+/* ══════════════════════════════════════════════════
+   HERO  —  full-bleed image, centered
+══════════════════════════════════════════════════ */
+.hero{
+  position:relative;
+  min-height:calc(100vh - 40px);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('hero-bg.jpg') center/cover no-repeat;
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom, rgba(10,10,10,.55) 0%, rgba(10,10,10,.40) 50%, rgba(10,10,10,.65) 100%);
+}
+.hero-content{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+  padding:80px 24px;
+  max-width:820px;
+}
+.hero-content .eyebrow{color:var(--amber);justify-content:center}
+.hero-content .eyebrow::before{background:var(--amber)}
+.hero-content .body-txt{color:rgba(255,255,255,.7);margin:20px 0 40px;text-align:center}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:64px}
+.hero-nums{
+  display:flex;gap:0;
+  border-top:1px solid rgba(255,255,255,.15);
+  padding-top:40px;flex-wrap:wrap;justify-content:center;
+}
+.hero-num-item{padding:0 40px;border-right:1px solid rgba(255,255,255,.15)}
+.hero-num-item:last-child{border:none}
+.hero-num-item .n{font-size:40px;font-weight:800;color:var(--amber);line-height:1}
+.hero-num-item .l{font-size:11px;font-weight:500;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* ══════════════════════════════════════════════════
+   TRUST BAR
+══════════════════════════════════════════════════ */
+.trust{background:var(--cream);border-bottom:1px solid var(--border);padding:24px 0}
+.trust-list{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.t-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--dark)}
+.t-item i{color:var(--amber);font-size:18px}
+.t-sep{width:1px;height:28px;background:var(--border)}
+
+/* ══════════════════════════════════════════════════
+   ABOUT
+══════════════════════════════════════════════════ */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.img-mosaic{position:relative;height:520px}
+.img-mosaic img{border-radius:16px;object-fit:cover;position:absolute}
+.img-main{width:75%;height:90%;top:0;left:0;box-shadow:0 28px 60px rgba(0,0,0,.13);object-position:center center}
+.img-thumb{width:50%;height:54%;bottom:0;right:0;border:5px solid #fff;box-shadow:0 16px 40px rgba(0,0,0,.15)}
+.img-tag{
+  position:absolute;top:24px;right:-12px;z-index:2;
+  background:var(--amber);color:var(--black);
+  border-radius:14px;padding:18px 22px;text-align:center;
+  font-weight:800;font-size:14px;line-height:1.4;
+  box-shadow:0 10px 32px rgba(245,158,11,.4);
+}
+.img-tag b{display:block;font-size:32px;line-height:1}
+.about-body .h-lg{margin-bottom:20px}
+.about-body .body-txt{margin-bottom:16px}
+.checks{display:flex;flex-direction:column;gap:12px;margin:28px 0 36px}
+.check{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:var(--dark);font-weight:500}
+.check i{color:var(--amber);margin-top:3px;flex-shrink:0}
+
+/* ══════════════════════════════════════════════════
+   VM  BAND
+══════════════════════════════════════════════════ */
+.vm{background:var(--dark);padding:80px 0}
+.vm-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px}
+.vm-panel{border-left:3px solid var(--amber);padding-left:32px}
+.vm-panel .eyebrow-wh{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:12px;display:block}
+.vm-panel h3{font-size:28px;font-weight:800;color:#fff;margin-bottom:18px}
+.vm-panel p{font-size:15px;color:rgba(255,255,255,.6);line-height:1.85}
+.vm-list{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:14px}
+.vm-list li{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:rgba(255,255,255,.7);line-height:1.7}
+.vm-list li i{color:var(--amber);margin-top:3px;flex-shrink:0}
+
+/* ══════════════════════════════════════════════════
+   CHAIRMAN MESSAGE
+══════════════════════════════════════════════════ */
+.chairman{background:var(--cream);padding:96px 0}
+.chairman-wrap{
+  display:grid;grid-template-columns:280px 1fr;gap:72px;align-items:center;
+}
+.chairman-left{display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px}
+.ch-avatar{
+  width:160px;height:160px;border-radius:50%;
+  background:var(--dark);
+  border:4px solid var(--amber);
+  overflow:hidden;
+  box-shadow:0 16px 48px rgba(0,0,0,.18);
+  flex-shrink:0;
+}
+.ch-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.ch-name{font-size:18px;font-weight:800;color:var(--dark);margin-top:4px}
+.ch-title{font-size:12px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:1px}
+.ch-company{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
+.chairman-right{position:relative}
+.ch-quote-mark{
+  font-size:120px;line-height:.7;font-family:Georgia,serif;
+  color:var(--amber);opacity:.18;
+  position:absolute;top:-10px;left:-10px;
+  pointer-events:none;
+}
+.ch-message{
+  font-size:16px;line-height:1.95;color:var(--dark);
+  font-style:italic;padding-left:20px;
+  border-left:3px solid var(--amber);
+  margin-bottom:28px;
+}
+.ch-message strong{font-style:normal;color:var(--amber)}
+.ch-sign{font-size:14px;color:var(--muted);padding-left:20px}
+.ch-sign b{display:block;font-size:15px;color:var(--dark);font-weight:700;margin-bottom:2px}
+@media(max-width:900px){
+  .chairman-wrap{grid-template-columns:1fr;gap:40px}
+  .chairman-left{flex-direction:row;text-align:left;align-items:center}
+  .ch-avatar{width:90px;height:90px;font-size:34px;flex-shrink:0}
+}
+@media(max-width:600px){
+  .chairman-left{flex-direction:column;text-align:center}
+}
+
+/* ══════════════════════════════════════════════════
+   SERVICES
+══════════════════════════════════════════════════ */
+.svc-bg{background:var(--cream)}
+.svc-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px}
+.svc-head .body-txt{max-width:400px}
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.svc-card{
+  background:var(--white);border-radius:16px;
+  overflow:hidden;border:1px solid var(--border);
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+  cursor:default;
+}
+.svc-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1);border-color:var(--amber)}
+.svc-thumb{width:100%;height:140px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-direction:column;gap:4px}
+.svc-thumb .svc-ico-lg{font-size:54px;color:rgba(255,255,255,.88);line-height:1;transition:transform .35s}
+.svc-card:hover .svc-ico-lg{transform:scale(1.12)}
+.svc-thumb .svc-lbl{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.svc-body{padding:16px 20px 20px}
+.svc-body h4{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.svc-body p{font-size:12px;color:var(--muted);line-height:1.65}
+
+/* ══════════════════════════════════════════════════
+   WHY / HOW / WHAT
+══════════════════════════════════════════════════ */
+.whw{background:var(--black);padding:96px 0}
+.whw-head{text-align:center;margin-bottom:72px}
+.whw-head .eyebrow{color:var(--amber);justify-content:center}
+.whw-head .h-lg{color:#fff;margin-bottom:14px}
+.whw-head .body-txt{color:rgba(255,255,255,.4);max-width:560px;margin:0 auto;text-align:center}
+.whw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.whw-card{
+  padding:52px 40px 48px;position:relative;overflow:hidden;
+  border-top:3px solid rgba(245,158,11,.2);
+  background:rgba(255,255,255,.02);
+  transition:.3s;
+}
+.whw-card:hover{background:rgba(255,255,255,.05)}
+.whw-card.why{border-top-color:var(--amber)}
+.whw-card.how{border-top-color:rgba(245,158,11,.6)}
+.whw-card.what{border-top-color:rgba(245,158,11,.3)}
+.whw-bg-word{
+  font-size:120px;font-weight:900;line-height:1;
+  color:rgba(255,255,255,.04);
+  position:absolute;bottom:-10px;right:16px;
+  letter-spacing:-4px;pointer-events:none;user-select:none;
+}
+.whw-ico{
+  width:64px;height:64px;border-radius:18px;
+  background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);
+  color:var(--amber);font-size:26px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:24px;transition:.3s;
+}
+.whw-card:hover .whw-ico{background:var(--amber);color:var(--black);border-color:var(--amber)}
+.whw-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.whw-card h3{font-size:22px;font-weight:800;color:#fff;margin-bottom:16px;line-height:1.2}
+.whw-card>p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.85;margin-bottom:20px}
+.whw-pts{list-style:none;display:flex;flex-direction:column;gap:11px}
+.whw-pts li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(255,255,255,.45);line-height:1.65}
+.whw-pts li i{color:var(--amber);font-size:10px;margin-top:5px;flex-shrink:0}
+.whw-connector{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-top:56px;flex-wrap:wrap;gap:8px;
+}
+.whw-pill{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 28px;border-radius:50px;
+  background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);
+  color:rgba(255,255,255,.7);font-size:13px;font-weight:600;
+}
+.whw-pill i{color:var(--amber)}
+.whw-arr{color:rgba(245,158,11,.3);font-size:20px;margin:0 4px}
+/* IPM service delivery steps */
+.ipm-steps{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  margin-top:64px;position:relative;
+}
+.ipm-steps::before{
+  content:'';position:absolute;top:27px;left:12%;right:12%;
+  height:1px;background:linear-gradient(90deg,transparent,rgba(245,158,11,.35),rgba(245,158,11,.35),transparent);
+}
+.ipm-step{text-align:center;padding:0 20px;position:relative}
+.ipm-n{
+  width:56px;height:56px;border-radius:50%;
+  border:1.5px solid rgba(245,158,11,.45);
+  background:var(--black);color:var(--amber);
+  font-size:18px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;position:relative;z-index:1;
+  transition:.3s;
+}
+.ipm-step:hover .ipm-n{background:var(--amber);color:var(--black);border-color:var(--amber)}
+.ipm-step h4{font-size:14px;font-weight:800;color:#fff;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.ipm-step p{font-size:12px;color:rgba(255,255,255,.38);line-height:1.7}
+@media(max-width:1100px){
+  .whw-grid{grid-template-columns:1fr;gap:2px}
+  .ipm-steps{grid-template-columns:repeat(2,1fr);gap:32px}
+  .ipm-steps::before{display:none}
+}
+@media(max-width:768px){
+  .whw-card{padding:40px 28px}
+  .ipm-steps{grid-template-columns:1fr;gap:24px}
+}
+
+/* ══════════════════════════════════════════════════
+   WHY US  — 4 blocks
+══════════════════════════════════════════════════ */
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
+.why-card{
+  padding:40px;border-radius:20px;
+  background:var(--cream);border:1px solid var(--border);
+  display:flex;flex-direction:column;gap:16px;
+  transition:.3s;
+}
+.why-card:hover{background:var(--dark);border-color:var(--dark);box-shadow:0 20px 56px rgba(0,0,0,.15)}
+.why-card:hover h3,.why-card:hover p{color:inherit}
+.why-card:hover h3{color:#fff}
+.why-card:hover p{color:rgba(255,255,255,.55)}
+.why-card:hover .w-ico{background:var(--amber);color:var(--black)}
+.why-card:hover .w-pts li{color:rgba(255,255,255,.65)}
+.why-card:hover .w-pts li i{color:var(--amber)}
+.w-ico{width:60px;height:60px;border-radius:16px;background:rgba(245,158,11,.1);color:var(--amber);font-size:26px;display:flex;align-items:center;justify-content:center;transition:.3s}
+.why-card h3{font-size:20px;font-weight:800;color:var(--dark);transition:.3s}
+.why-card p{font-size:14px;color:var(--muted);line-height:1.75;transition:.3s}
+.w-pts{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.w-pts li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted);font-weight:500;transition:.3s}
+.w-pts li i{color:var(--amber);font-size:12px}
+
+/* ══════════════════════════════════════════════════
+   CLIENTS  — marquee
+══════════════════════════════════════════════════ */
+.clients-bg{background:var(--white)}
+.marquee-outer{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);display:flex;flex-direction:column;gap:14px}
+.marquee-row{display:flex;width:max-content;gap:14px;animation:ticker 32s linear infinite}
+.marquee-row.rev{animation-name:ticker-rev}
+.marquee-row:hover{animation-play-state:paused}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes ticker-rev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.cl-tile{
+  flex-shrink:0;width:160px;height:84px;
+  background:var(--white);border:1px solid var(--border);border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  transition:.25s;
+}
+.cl-tile:hover{border-color:var(--amber);box-shadow:0 4px 18px rgba(245,158,11,.15)}
+.cl-tile img{max-height:40px;max-width:120px;object-fit:contain;transition:.25s}
+.cl-tile:hover img{transform:scale(1.05)}
+.cl-tile .cl-fb{font-size:10px;font-weight:700;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.4px;display:none;padding:0 8px}
+.cl-tile.nol img{display:none}
+.cl-tile.nol .cl-fb{display:block}
+
+/* ══════════════════════════════════════════════════
+   CTA BAND
+══════════════════════════════════════════════════ */
+.cta-band{
+  background:var(--amber);padding:80px 0;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-band::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:rgba(0,0,0,.06);top:-200px;left:-100px}
+.cta-band::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(0,0,0,.06);bottom:-200px;right:-80px}
+.cta-band h2{font-size:clamp(28px,4vw,48px);font-weight:900;color:var(--black);margin-bottom:14px;position:relative;z-index:1;letter-spacing:-1px}
+.cta-band p{font-size:17px;color:rgba(0,0,0,.6);margin-bottom:36px;position:relative;z-index:1}
+.cta-band .btn-group{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+/* ══════════════════════════════════════════════════
+   BRANCHES
+══════════════════════════════════════════════════ */
+.branches-bg{background:var(--cream)}
+.br-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.br-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:14px;padding:22px 20px;
+  transition:.25s;position:relative;overflow:hidden;
+}
+.br-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--amber);transform:scaleX(0);transform-origin:left;transition:.3s}
+.br-card:hover{border-color:rgba(245,158,11,.4);transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.07)}
+.br-card:hover::before{transform:scaleX(1)}
+.br-state{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:7px}
+.br-state i{color:var(--amber);font-size:13px}
+.br-cities{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ══════════════════════════════════════════════════
+   CONTACT
+══════════════════════════════════════════════════ */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:580px}
+.c-left{
+  background:var(--dark);padding:80px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.c-left::after{content:'';position:absolute;width:320px;height:320px;border-radius:50%;border:60px solid rgba(245,158,11,.07);bottom:-100px;right:-100px}
+.c-left h2{font-size:36px;font-weight:800;color:#fff;margin-bottom:14px}
+.c-left p{color:rgba(255,255,255,.55);font-size:15px;line-height:1.8;margin-bottom:40px}
+.c-row{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px}
+.c-ico{width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.12);color:var(--amber);font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.c-txt strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);margin-bottom:5px}
+.c-txt a,.c-txt span{color:#fff;font-size:14px;line-height:1.75;font-weight:500;display:block}
+.c-txt a:hover{color:var(--amber)}
+.c-right{
+  background:var(--white);padding:80px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.c-right h3{font-size:24px;font-weight:800;color:var(--dark);margin-bottom:28px}
+.fg{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.fg label{font-size:12px;font-weight:600;color:var(--dark);text-transform:uppercase;letter-spacing:.6px}
+.fg input,.fg select,.fg textarea{padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Poppins',sans-serif;color:var(--dark);background:var(--cream);outline:none;transition:.2s;resize:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--amber);background:#fff}
+.fg textarea{min-height:100px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ══════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════ */
+footer{background:var(--black);padding:36px 0;border-top:2px solid var(--amber)}
+.foot-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.f-brand{display:flex;align-items:center;gap:12px}
+.f-brand img{width:44px;height:44px;object-fit:contain;background:#fff;border-radius:8px;padding:2px}
+.f-brand b{display:block;color:#fff;font-size:15px;font-weight:800}
+.f-brand small{color:var(--amber);font-size:10px;text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.f-copy{font-size:12px;color:rgba(255,255,255,.25)}
+.f-nav{display:flex;gap:18px}
+.f-nav a{font-size:12px;color:rgba(255,255,255,.35);transition:.2s}
+.f-nav a:hover{color:var(--amber)}
+.f-soc{display:flex;gap:10px}
+.f-soc a{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:14px;transition:.2s}
+.f-soc a:hover{background:var(--amber);color:var(--black)}
+
+/* scroll-top */
+#stb{position:fixed;bottom:28px;right:28px;z-index:999;width:46px;height:46px;border-radius:50%;background:var(--amber);color:var(--black);border:none;cursor:pointer;font-size:17px;display:none;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(245,158,11,.4);transition:transform .2s}
+#stb:hover{transform:translateY(-3px)}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════ */
+@media(max-width:1100px){
+  .hero{min-height:80vh}
+  .hero-content{padding:80px 24px 60px}
+  .about-grid{grid-template-columns:1fr;gap:48px}
+  .img-mosaic{height:360px;max-width:500px}
+  .svc-grid{grid-template-columns:repeat(3,1fr);gap:14px}
+  .why-grid{grid-template-columns:1fr}
+  .br-grid{grid-template-columns:repeat(2,1fr)}
+  .contact-wrap{grid-template-columns:1fr}
+  .vm-grid{grid-template-columns:1fr;gap:40px}
+}
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:72px;left:0;right:0;background:#fff;flex-direction:column;padding:12px;border-top:1px solid var(--border);box-shadow:0 12px 32px rgba(0,0,0,.08)}
+  .nav-links.open{display:flex}
+  .nav-links a{width:100%;padding:11px 16px}
+  .hamburger{display:flex}
+  .nav-tel{display:none}
+  .pad{padding:60px 0}
+  .svc-grid{grid-template-columns:repeat(2,1fr)}
+  .trust-list{justify-content:center}
+  .t-sep{display:none}
+  .c-left,.c-right{padding:56px 32px}
+  .foot-row{flex-direction:column;text-align:center}
+  .f-nav,.f-soc{justify-content:center}
+  .svc-head{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .svc-grid{grid-template-columns:1fr}
+  .br-grid{grid-template-columns:1fr}
+  .hero-nums{flex-direction:column;gap:20px}
+  .hero-num-item{border:none;padding:0;margin:0}
+  .fg-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <i class="fa-solid fa-phone" style="margin-right:5px"></i><a href="tel:+919705243333">+91 970 524 3333</a>&nbsp;&nbsp;·&nbsp;&nbsp;<i class="fa-solid fa-envelope" style="margin-right:5px"></i><a href="mailto:sales@servicemonks.com">sales@servicemonks.com</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="wrap">
+    <div class="nav-row">
+      <a href="#home" class="logo-box">
+        <img src="logo.jpeg" alt="Service Monks"/>
+        <div class="logo-name">
+          <b>Service Monks</b>
+          <small>Integrated Solutions Private Limited</small>
+        </div>
+      </a>
+      <ul class="nav-links" id="nl">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#process">Approach</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#clients">Clients</a></li>
+        <li><a href="#branches">Branches</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <span class="nav-tel"><i class="fa-solid fa-phone-volume"></i>+91 970 524 3333</span>
+        <a href="#contact" class="btn btn-amber" style="padding:10px 22px;font-size:13px">Get Free Quote</a>
+      </div>
+      <div class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ═══════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="eyebrow">India's Trusted Pest Management Partner</div>
+    <h1 class="h-xl">We Have The Solutions To<br/><em>Care Your Health &amp;<br/>Properties</em></h1>
+    <p class="body-txt">9+ years of expertise in Integrated Pest Management. Certified, eco-friendly, and fully tailored to every client's unique needs.</p>
+    <div class="hero-btns">
+      <a href="#services" class="btn btn-amber"><i class="fa-solid fa-bug-slash"></i>Explore Services</a>
+      <a href="#contact" class="btn btn-ghost">Free Inspection</a>
+    </div>
+    <div class="hero-nums">
+      <div class="hero-num-item"><div class="n">9+</div><div class="l">Years Exp.</div></div>
+      <div class="hero-num-item"><div class="n">50+</div><div class="l">Clients</div></div>
+      <div class="hero-num-item"><div class="n">14+</div><div class="l">Services</div></div>
+      <div class="hero-num-item"><div class="n">39</div><div class="l">Branches</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust">
+  <div class="wrap">
+    <div class="trust-list">
+      <div class="t-item"><i class="fa-solid fa-certificate"></i>Fully Certified</div>
+      <div class="t-sep"></div>
+      <div class="t-item"><i class="fa-solid fa-leaf"></i>Eco-Friendly IPM</div>
+      <div class="t-sep"></div>
+      <div class="t-item"><i class="fa-solid fa-headset"></i>24/7 Support</div>
+      <div class="t-sep"></div>
+      <div class="t-item"><i class="fa-solid fa-clipboard-check"></i>Full Documentation</div>
+      <div class="t-sep"></div>
+      <div class="t-item"><i class="fa-solid fa-users"></i>50+ Corporate Clients</div>
+      <div class="t-sep"></div>
+      <div class="t-item"><i class="fa-solid fa-map-location-dot"></i>Pan-India Presence</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══════════════════════════════════════ -->
+<section class="pad" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="img-mosaic" data-rev="l">
+        <img class="img-main"
+          src="about-inspect.jpg"
+          alt="Service Monks Professional Conducting Site Inspection"/>
+        <img class="img-thumb"
+          src="https://images.pexels.com/photos/4099465/pexels-photo-4099465.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1"
+          alt="Pest Control Professional with Spray Equipment"/>
+        <div class="img-tag"><b>9+</b>Years of<br/>Excellence</div>
+      </div>
+      <div class="about-body" data-rev="r">
+        <div class="eyebrow">About Us</div>
+        <h2 class="h-lg">India's Leading <em>Integrated Pest Management</em> Partner</h2>
+        <p class="body-txt">Service Monks Integrated Solutions Private Limited is a leading service provider in the Pest Management Industry — delivering superior Pest Management &amp; Consultation Services to all types of clients, from residential homes to large corporates.</p>
+        <p class="body-txt">Our service is based on the principles of <strong>Integrated Pest Management (IPM)</strong> — from survey and inspection right through to execution by trained, certified Pest Management Professionals (PMP's).</p>
+        <div class="checks">
+          <div class="check"><i class="fa-solid fa-circle-check"></i>9+ years of international-level experience</div>
+          <div class="check"><i class="fa-solid fa-circle-check"></i>Certified PMP's trained in-house with latest equipment</div>
+          <div class="check"><i class="fa-solid fa-circle-check"></i>Eco-friendly, health-safe treatment methods</div>
+          <div class="check"><i class="fa-solid fa-circle-check"></i>Serving residential, commercial &amp; industrial sectors</div>
+          <div class="check"><i class="fa-solid fa-circle-check"></i>Quick response, custom plans, full follow-up</div>
+        </div>
+        <a href="#contact" class="btn btn-amber"><i class="fa-solid fa-paper-plane"></i>Get in Touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VISION & MISSION ═══════════════════════════ -->
+<section class="vm" id="vm">
+  <div class="wrap">
+    <div class="vm-grid">
+      <div class="vm-panel" data-rev="l">
+        <span class="eyebrow-wh">Our Vision</span>
+        <h3>Where We're Headed</h3>
+        <ul class="vm-list">
+          <li><i class="fa-solid fa-check"></i>To create healthy, safe living and working conditions for all clients.</li>
+          <li><i class="fa-solid fa-check"></i>To maintain stringent quality control norms across every service delivered.</li>
+          <li><i class="fa-solid fa-check"></i>To provide 100% work satisfaction to every valuable client, every time.</li>
+        </ul>
+      </div>
+      <div class="vm-panel" data-rev="r">
+        <span class="eyebrow-wh">Our Mission</span>
+        <h3>How We Deliver</h3>
+        <p>Service Monks is a maiden Pest Management company with top management holding <strong style="color:var(--amber)">9+ years</strong> of cumulative international experience. Our mission is to deliver the best quality service through quick response, customized solutions, individual focus, and constant R&amp;D — protecting human health by keeping every locality free from pests.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CHAIRMAN MESSAGE ════════════════════════════ -->
+<section class="chairman" id="chairman">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:56px" data-rev>
+      <div class="eyebrow" style="justify-content:center">Leadership</div>
+      <h2 class="h-lg">Chairman's <em>Message</em></h2>
+    </div>
+    <div class="chairman-wrap">
+      <div class="chairman-left" data-rev="l">
+        <div class="ch-avatar"><img src="chairman.jpg" alt="Divya Sumanth Reddy A"/></div>
+        <div>
+          <div class="ch-name">Divya Sumanth Reddy A</div>
+          <div class="ch-title">Chairman &amp; Managing Director</div>
+          <div class="ch-company">Service Monks Integrated Solutions<br/>Private Limited</div>
+        </div>
+      </div>
+      <div class="chairman-right" data-rev="r">
+        <div class="ch-quote-mark">"</div>
+        <p class="ch-message">
+          At <strong>Service Monks</strong>, our purpose has always been clear — to protect the health, safety, and comfort of every individual and organisation we serve. Since our founding, we have built this company on a foundation of science-backed Integrated Pest Management, unwavering service quality, and genuine care for our clients and the environment.<br/><br/>
+          We believe that a pest-free environment is not a luxury — it is a necessity. Whether it is a family home, a corporate office, a hospital, or an industrial facility, every space deserves to be clean, safe, and free from the threats that pests bring. It is this belief that drives our team every single day.<br/><br/>
+          Our commitment to <strong>continuous research, certified professionals, and eco-friendly practices</strong> ensures that every client receives not just a service, but a lasting solution. I am proud of the trust our clients have placed in us and remain personally committed to upholding the highest standards in everything we do.<br/><br/>
+          Thank you for choosing Service Monks. We are honoured to be your partner in creating healthier, safer spaces.
+        </p>
+        <div class="ch-sign">
+          Chairman &amp; Managing Director — Service Monks Integrated Solutions Private Limited
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SERVICES ════════════════════════════════════ -->
+<section class="pad svc-bg" id="services">
+  <div class="wrap">
+    <div class="svc-head" data-rev>
+      <div>
+        <div class="eyebrow">What We Do</div>
+        <h2 class="h-lg">Our Pest Control <em>Services</em></h2>
+      </div>
+      <p class="body-txt">Comprehensive, certified solutions for every pest challenge — residential, commercial, and industrial.</p>
+    </div>
+    <div class="svc-grid" data-rev>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#7c2d12,#ea580c)">
+          <span class="svc-ico-lg">🐀</span><span class="svc-lbl">Rodent Control</span>
+        </div>
+        <div class="svc-body"><h4>Rodent Control</h4><p>Advanced baiting, trapping and exclusion to eliminate mice and rats and block re-entry permanently.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#3f3f46,#71717a)">
+          <span class="svc-ico-lg">🪳</span><span class="svc-lbl">Cockroach Control</span>
+        </div>
+        <div class="svc-body"><h4>Cockroach Control</h4><p>Gel baiting and electronic treatment to eliminate disease-spreading cockroaches from your premises.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#1d4ed8,#38bdf8)">
+          <span class="svc-ico-lg">🦟</span><span class="svc-lbl">Mosquito Control</span>
+        </div>
+        <div class="svc-body"><h4>Mosquito Control</h4><p>Fogging, larviciding and residual spraying against dengue, malaria and chikungunya vectors.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#713f12,#ca8a04)">
+          <span class="svc-ico-lg">🪵</span><span class="svc-lbl">Termite Control</span>
+        </div>
+        <div class="svc-body"><h4>Termite Control</h4><p>Pre- and post-construction anti-termite soil and wood treatment to safeguard property structures.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#3b0764,#7c3aed)">
+          <span class="svc-ico-lg">🕷️</span><span class="svc-lbl">Spider Control</span>
+        </div>
+        <div class="svc-body"><h4>Spider Control</h4><p>Targeted elimination of venomous and nuisance spiders, webs and egg sacs indoors and outdoors.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#14532d,#16a34a)">
+          <span class="svc-ico-lg">🐍</span><span class="svc-lbl">Snake Prevention</span>
+        </div>
+        <div class="svc-body"><h4>Snake Prevention</h4><p>Habitat modification, barriers and rodent control to make your property unappealing to snakes.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#0f766e,#2dd4bf)">
+          <span class="svc-ico-lg">🦎</span><span class="svc-lbl">Lizard Control</span>
+        </div>
+        <div class="svc-body"><h4>Lizard Control</h4><p>Non-toxic trapping and repellent treatments for lizard management in homes and kitchens.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#7f1d1d,#dc2626)">
+          <span class="svc-ico-lg">🐛</span><span class="svc-lbl">Bed Bug Control</span>
+        </div>
+        <div class="svc-body"><h4>Bed Bug Control</h4><p>Heat treatment and chemical eradication at all life stages with full follow-up for zero recurrence.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#1e293b,#64748b)">
+          <span class="svc-ico-lg">🪰</span><span class="svc-lbl">Fly Control</span>
+        </div>
+        <div class="svc-body"><h4>Fly Control</h4><p>UV traps, fly screens and residual spray — essential for food businesses and healthcare facilities.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#0c4a6e,#0ea5e9)">
+          <span class="svc-ico-lg">🧪</span><span class="svc-lbl">Disinfection</span>
+        </div>
+        <div class="svc-body"><h4>Disinfection / Sterifume</h4><p>Eliminate bacteria, viruses and fungi from all surfaces — critical for healthcare and food sectors.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#78350f,#f59e0b)">
+          <span class="svc-ico-lg">🐝</span><span class="svc-lbl">Beehive Removal</span>
+        </div>
+        <div class="svc-body"><h4>Beehive Removal</h4><p>Safe, humane beehive and wasp nest removal with treatment to prevent recolonisation.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#1e3a5f,#475569)">
+          <span class="svc-ico-lg">🚪</span><span class="svc-lbl">Entry Points</span>
+        </div>
+        <div class="svc-body"><h4>Entry Point Closure</h4><p>Sealing cracks, gaps and structural vulnerabilities — the foundation of long-term pest IPM.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#4a2c0a,#b45309)">
+          <span class="svc-ico-lg">🌾</span><span class="svc-lbl">Stored Pests</span>
+        </div>
+        <div class="svc-body"><h4>Stored Pest Insects</h4><p>Fumigation and residual treatments for warehouses, grain storage and food facilities.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#881337,#e11d48)">
+          <span class="svc-ico-lg">🐜</span><span class="svc-lbl">Ant Control</span>
+        </div>
+        <div class="svc-body"><h4>Ant Control</h4><p>Targeted baiting, colony elimination and barrier treatments to eradicate ant infestations of all species.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#14532d,#4ade80)">
+          <span class="svc-ico-lg">🌿</span><span class="svc-lbl">Weed Control</span>
+        </div>
+        <div class="svc-body"><h4>Weed Control</h4><p>Selective herbicide application and preventive treatments to eliminate weeds from gardens, lawns and landscapes.</p></div>
+      </div>
+
+      <div class="svc-card">
+        <div class="svc-thumb" style="background:linear-gradient(135deg,#0f172a,#334155)">
+          <span class="svc-ico-lg">🦗</span><span class="svc-lbl">All Insects</span>
+        </div>
+        <div class="svc-body"><h4>All Crawling &amp; Flying Insects</h4><p>Fleas, ticks, aphids and all other crawling and flying insects — species-specific, targeted protocols.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHY / HOW / WHAT ════════════════════════════ -->
+<section class="whw" id="process">
+  <div class="wrap">
+    <div class="whw-head" data-rev>
+      <div class="eyebrow">Our Approach</div>
+      <h2 class="h-lg">The <em>Why, How &amp; What</em> of Service Monks</h2>
+      <p class="body-txt">Everything we do is driven by purpose, delivered through a proven process, and backed by a comprehensive range of services.</p>
+    </div>
+    <div class="whw-grid">
+
+      <!-- WHY -->
+      <div class="whw-card why" data-rev="l">
+        <div class="whw-bg-word">WHY</div>
+        <div class="whw-ico"><i class="fa-solid fa-heart-pulse"></i></div>
+        <div class="whw-tag">Why We Exist</div>
+        <h3>Because Health &amp; Safety Cannot Wait</h3>
+        <p>We believe every person deserves to live and work in a space that is safe, hygienic, and pest-free. Pests are not just a nuisance — they are a direct threat to health, property, and wellbeing.</p>
+        <ul class="whw-pts">
+          <li><i class="fa-solid fa-circle-dot"></i>Protecting human health by eliminating pest-related disease vectors</li>
+          <li><i class="fa-solid fa-circle-dot"></i>Preserving property value by preventing structural pest damage</li>
+          <li><i class="fa-solid fa-circle-dot"></i>Creating clean, safe environments for families, employees &amp; patients</li>
+          <li><i class="fa-solid fa-circle-dot"></i>Delivering peace of mind — every visit, every time</li>
+        </ul>
+      </div>
+
+      <!-- HOW -->
+      <div class="whw-card how" data-rev>
+        <div class="whw-bg-word">HOW</div>
+        <div class="whw-ico"><i class="fa-solid fa-gears"></i></div>
+        <div class="whw-tag">How We Do It</div>
+        <h3>Through Science-Backed Integrated Pest Management</h3>
+        <p>We follow the globally recognised <strong style="color:var(--amber)">ERDM Methodology</strong> — a structured, evidence-based approach that minimises chemicals while maximising results.</p>
+        <ul class="whw-pts">
+          <li><i class="fa-solid fa-circle-dot"></i><strong style="color:rgba(255,255,255,.75)">Exclusion</strong> — sealing entry points to prevent pest access</li>
+          <li><i class="fa-solid fa-circle-dot"></i><strong style="color:rgba(255,255,255,.75)">Restriction</strong> — eliminating food, water &amp; harborage conditions</li>
+          <li><i class="fa-solid fa-circle-dot"></i><strong style="color:rgba(255,255,255,.75)">Destruction</strong> — targeted treatments by certified PMPs</li>
+          <li><i class="fa-solid fa-circle-dot"></i><strong style="color:rgba(255,255,255,.75)">Monitoring</strong> — ongoing inspection, documentation &amp; follow-up</li>
+        </ul>
+      </div>
+
+      <!-- WHAT -->
+      <div class="whw-card what" data-rev="r">
+        <div class="whw-bg-word">WHAT</div>
+        <div class="whw-ico"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="whw-tag">What We Offer</div>
+        <h3>Comprehensive Pest Management for Every Space</h3>
+        <p>From a single-room treatment to a pan-India facility management contract — our 16+ specialist services cover every pest challenge across all sectors.</p>
+        <ul class="whw-pts">
+          <li><i class="fa-solid fa-circle-dot"></i>Residential — homes, apartments &amp; housing societies</li>
+          <li><i class="fa-solid fa-circle-dot"></i>Commercial — offices, retail, hotels &amp; restaurants</li>
+          <li><i class="fa-solid fa-circle-dot"></i>Healthcare — hospitals, clinics &amp; pharma facilities</li>
+          <li><i class="fa-solid fa-circle-dot"></i>Industrial — warehouses, factories &amp; food processing units</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="whw-connector" data-rev>
+      <div class="whw-pill"><i class="fa-solid fa-heart-pulse"></i>Purpose-Driven</div>
+      <i class="fa-solid fa-chevron-right whw-arr"></i>
+      <div class="whw-pill"><i class="fa-solid fa-flask"></i>Science-Backed</div>
+      <i class="fa-solid fa-chevron-right whw-arr"></i>
+      <div class="whw-pill"><i class="fa-solid fa-shield-halved"></i>Results-Guaranteed</div>
+    </div>
+
+    <!-- IPM Service Delivery Steps -->
+    <div class="ipm-steps" data-rev>
+      <div class="ipm-step">
+        <div class="ipm-n">1</div>
+        <h4>Prescribe</h4>
+        <p>Formulate a responsible, targeted plan — matching the right products and techniques to the inspection findings.</p>
+      </div>
+      <div class="ipm-step">
+        <div class="ipm-n">2</div>
+        <h4>Treat</h4>
+        <p>Execute the plan with proper safety precautions, per label directions, for consistent and effective results.</p>
+      </div>
+      <div class="ipm-step">
+        <div class="ipm-n">3</div>
+        <h4>Communicate</h4>
+        <p>Keep clients fully informed throughout — explaining findings, expectations and how they can support the process.</p>
+      </div>
+      <div class="ipm-step">
+        <div class="ipm-n">4</div>
+        <h4>Follow-Up</h4>
+        <p>Post-service inspection and calls to confirm objectives were met and detect any new developments early.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ WHY US ══════════════════════════════════════ -->
+<section class="pad" id="why">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:56px" data-rev>
+      <div class="eyebrow" style="justify-content:center">Why Choose Us</div>
+      <h2 class="h-lg" style="margin-bottom:0">Why <em>Service Monks</em> Stands Apart</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card" data-rev>
+        <div class="w-ico"><i class="fa-solid fa-certificate"></i></div>
+        <h3>Certified &amp; Knowledgeable</h3>
+        <p>Every Pest Management Professional is fully certified, trained in-house, and operationally equipped with the latest tools and safety gear.</p>
+        <ul class="w-pts">
+          <li><i class="fa-solid fa-check"></i>Recognised industry certifications</li>
+          <li><i class="fa-solid fa-check"></i>Uniform, ID cards &amp; full safety equipment</li>
+          <li><i class="fa-solid fa-check"></i>Latest pest management technology</li>
+        </ul>
+      </div>
+      <div class="why-card" data-rev>
+        <div class="w-ico"><i class="fa-solid fa-users-gear"></i></div>
+        <h3>Three-Tier Expert Team</h3>
+        <p>Dedicated Management, Operations and Technical teams ensure seamless planning, execution, and accountability at every level of service.</p>
+        <ul class="w-pts">
+          <li><i class="fa-solid fa-check"></i>9+ years international experience</li>
+          <li><i class="fa-solid fa-check"></i>Passionate, dedicated workforce</li>
+          <li><i class="fa-solid fa-check"></i>Commercial &amp; residential expertise</li>
+        </ul>
+      </div>
+      <div class="why-card" data-rev>
+        <div class="w-ico"><i class="fa-solid fa-file-contract"></i></div>
+        <h3>Complete Documentation</h3>
+        <p>Service delivery records, audit reports, trend analysis, and fully customized documentation — keeping you informed and compliant at all times.</p>
+        <ul class="w-pts">
+          <li><i class="fa-solid fa-check"></i>Service delivery reports every visit</li>
+          <li><i class="fa-solid fa-check"></i>Audit and trend analysis reports</li>
+          <li><i class="fa-solid fa-check"></i>Custom documentation on request</li>
+        </ul>
+      </div>
+      <div class="why-card" data-rev>
+        <div class="w-ico"><i class="fa-solid fa-leaf"></i></div>
+        <h3>Eco-Friendly IPM Methods</h3>
+        <p>Our ERDM-based approach minimises chemical use while maximising results — protecting your family, staff and the environment without compromise.</p>
+        <ul class="w-pts">
+          <li><i class="fa-solid fa-check"></i>Minimal chemicals — maximum results</li>
+          <li><i class="fa-solid fa-check"></i>Safe for children, pets and food areas</li>
+          <li><i class="fa-solid fa-check"></i>Constant R&amp;D for better methods</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLIENTS ═════════════════════════════════════ -->
+<section class="pad clients-bg" id="clients">
+  <div class="wrap" style="margin-bottom:44px" data-rev>
+    <div style="text-align:center">
+      <div class="eyebrow" style="justify-content:center">Trusted By The Best</div>
+      <h2 class="h-lg" style="margin-bottom:12px">Our Valued <em>Clients</em></h2>
+      <p class="body-txt" style="margin:0 auto;text-align:center;max-width:520px">Trusted by industry leaders across metro rail, pharma, hospitals, real estate, education, manufacturing and hospitality.</p>
+    </div>
+  </div>
+  <div class="marquee-outer">
+    <div class="marquee-row" id="mtrack"></div>
+    <div class="marquee-row rev" id="mtrack2"></div>
+  </div>
+</section>
+
+<!-- ══ CTA ════════════════════════════════════════ -->
+<div class="cta-band">
+  <div class="wrap">
+    <h2>Ready to Protect Your Premises?</h2>
+    <p>Get a free inspection and customised pest management plan — at zero cost, zero obligation.</p>
+    <div class="btn-group">
+      <a href="#contact" class="btn btn-dark"><i class="fa-solid fa-calendar-check"></i>Book Free Inspection</a>
+      <a href="tel:+919705243333" class="btn btn-dark"><i class="fa-solid fa-phone"></i>Call Now</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BRANCHES ════════════════════════════════════ -->
+<section class="pad branches-bg" id="branches">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:52px" data-rev>
+      <div class="eyebrow" style="justify-content:center">Our Presence</div>
+      <h2 class="h-lg" style="margin-bottom:12px">Branches Across <em>India</em></h2>
+      <p class="body-txt" style="margin:0 auto;text-align:center;max-width:480px">15 States · 39 Branches · one consistent standard of excellence.</p>
+    </div>
+    <div class="br-grid" data-rev>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Telangana</div><div class="br-cities">Hyderabad <span style="font-size:10px;background:var(--amber);color:#111;padding:1px 6px;border-radius:4px;font-weight:700;margin-left:4px">HO</span></div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Andhra Pradesh</div><div class="br-cities">Kakinada, Nellore, Tirupati, Vijayawada &amp; Vizag</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Assam</div><div class="br-cities">Guwahati</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Chhattisgarh</div><div class="br-cities">Raipur</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Delhi</div><div class="br-cities">Delhi</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Goa</div><div class="br-cities">Panaji</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Haryana</div><div class="br-cities">Gurugram</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Karnataka</div><div class="br-cities">Bengaluru, Mysuru, Hubli, Belgaum, Gulbarga &amp; Bidar</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Madhya Pradesh</div><div class="br-cities">Bhopal, Indore &amp; Jabalpur</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Maharashtra</div><div class="br-cities">Pune, Mumbai, Nashik, Nagpur, Chhatrapati Sambhajinagar &amp; Ahilyanagar</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Odisha</div><div class="br-cities">Bhubaneswar, Cuttack &amp; Berhampur</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Puducherry</div><div class="br-cities">Puducherry &amp; Yanam</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Tamilnadu</div><div class="br-cities">Chennai, Coimbatore, Thoothukudi &amp; Trichy</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>Uttar Pradesh</div><div class="br-cities">Noida, Varanasi &amp; Lucknow</div></div>
+      <div class="br-card"><div class="br-state"><i class="fa-solid fa-location-dot"></i>West Bengal</div><div class="br-cities">Kolkata</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ═════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="c-left" data-rev="l">
+      <h2>Let's Protect Your Premises</h2>
+      <p>Reach out for a free inspection, customised quote, or any enquiry. Our team is available 24/7.</p>
+      <div class="c-row">
+        <div class="c-ico"><i class="fa-solid fa-phone"></i></div>
+        <div class="c-txt">
+          <strong>Phone</strong>
+          <a href="tel:+919705243333">+91 970 524 3333</a>
+          <a href="tel:+919553585999">+91 955 358 5999</a>
+        </div>
+      </div>
+      <div class="c-row">
+        <div class="c-ico"><i class="fa-solid fa-envelope"></i></div>
+        <div class="c-txt">
+          <strong>Email</strong>
+          <a href="mailto:sales@servicemonks.com">sales@servicemonks.com</a>
+          <a href="mailto:info@servicemonks.com">info@servicemonks.com</a>
+        </div>
+      </div>
+      <div class="c-row">
+        <div class="c-ico"><i class="fa-solid fa-globe"></i></div>
+        <div class="c-txt">
+          <strong>Website</strong>
+          <a href="https://www.servicemonks.com" target="_blank">www.servicemonks.com</a>
+        </div>
+      </div>
+      <div class="c-row">
+        <div class="c-ico"><i class="fa-solid fa-location-dot"></i></div>
+        <div class="c-txt">
+          <strong>Address</strong>
+          <span>3rd Floor, Plot No 8, Street No 1,<br/>Czech Colony, Sanathnagar,<br/>Hyderabad, Telangana 500018</span>
+        </div>
+      </div>
+    </div>
+    <div class="c-right" data-rev="r">
+      <h3>Book a Free Inspection</h3>
+      <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="doSubmit(event)">
+        <input type="hidden" name="form-name" value="contact"/>
+        <p style="display:none"><label>Don't fill this out: <input name="bot-field"/></label></p>
+        <div class="fg-row">
+          <div class="fg"><label>Full Name *</label><input type="text" name="name" placeholder="Your name" required/></div>
+          <div class="fg"><label>Phone *</label><input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required/></div>
+        </div>
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com"/></div>
+        <div class="fg">
+          <label>Service Needed</label>
+          <select name="service">
+            <option value="">— Select a service —</option>
+            <option>Rodent Control</option><option>Cockroach Control</option>
+            <option>Mosquito Control</option><option>Termite Control</option>
+            <option>Fly Control</option><option>Spider Control</option>
+            <option>Snake Prevention</option><option>Lizard Control</option>
+            <option>Bed Bug Control</option><option>Disinfection / Sterifume</option>
+            <option>Beehive Removal</option><option>Entry Point Closure</option>
+            <option>Stored Pest Insects</option><option>General Pest Control</option>
+          </select>
+        </div>
+        <div class="fg"><label>Message</label><textarea name="message" placeholder="Describe your pest problem or property…"></textarea></div>
+        <button type="submit" class="btn btn-amber" style="width:100%;justify-content:center">
+          <i class="fa-solid fa-paper-plane"></i>Send Request
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="f-brand">
+        <img src="logo.jpeg" alt="Service Monks"/>
+        <div><b>Service Monks</b><small>Integrated Solutions Private Limited</small></div>
+      </div>
+      <div class="f-copy">&copy; 2024 Service Monks Integrated Solutions Private Limited. All rights reserved.</div>
+      <div class="f-nav">
+        <a href="#about">About</a><a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa-solid fa-chevron-up"></i></button>
+
+<script>
+/* nav */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('up',scrollY>10);
+  document.getElementById('stb').style.display=scrollY>500?'flex':'none';
+});
+function toggleNav(){document.getElementById('nl').classList.toggle('open')}
+document.querySelectorAll('#nl a').forEach(a=>a.addEventListener('click',()=>document.getElementById('nl').classList.remove('open')));
+
+/* reveal */
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+},{threshold:.1});
+document.querySelectorAll('[data-rev]').forEach(el=>ro.observe(el));
+
+/* stagger service cards */
+document.querySelectorAll('.svc-card').forEach((c,i)=>{c.style.transitionDelay=(i%4*60)+'ms'});
+document.querySelectorAll('.why-card').forEach((c,i)=>{c.style.transitionDelay=(i%2*80)+'ms'});
+
+/* marquee — local logos */
+const clients=[
+  {n:'Agarwal',             f:'Agarwal.png'},
+  {n:'Alekhya Homes',       f:'Alekhya-Homes.png'},
+  {n:'ALF',                 f:'ALF.png'},
+  {n:'Bhavya',              f:'bhavya-logo.png'},
+  {n:'BlueFin',             f:'BlueFin.png'},
+  {n:'BRC',                 f:'BRC logo.png'},
+  {n:'Brigade',             f:'Brigade.png'},
+  {n:'BVG',                 f:'BVG.png'},
+  {n:'CHIREC International',f:'CHIREC_International.png'},
+  {n:'CIE Automotive',      f:'CIE Automotive.png'},
+  {n:'Citrus',              f:'Citrus.png'},
+  {n:'Critical River',      f:'Critical River logo.png'},
+  {n:'Cystron',             f:'Cystron.png'},
+  {n:'ESIC',                f:'ESIC.png'},
+  {n:'Giridhari',           f:'Giridhari.png'},
+  {n:'GKRS',                f:'GKRS.png'},
+  {n:'HallMark',            f:'HallMark.png'},
+  {n:'HMRL',                f:'HMRL.png'},
+  {n:'Intron',              f:'Intron.png'},
+  {n:'Kaleesuwari',         f:'Kaleesuwari.png'},
+  {n:'Keolis Hyderabad',    f:'Keolis-Hyderabad-4C-HD.png'},
+  {n:'LN Laboratories',     f:'LN Laboratories.png'},
+  {n:'LN Pharmaceuticals',  f:'LN Pharmaceuticals.png'},
+  {n:'MSN',                 f:'MSN logo.png'},
+  {n:'Myscape',             f:'Myscape.png'},
+  {n:'NMIMS',               f:'NMIMS.png'},
+  {n:'Pace Hospital',       f:'Pace Hospital.png'},
+  {n:'Parry',               f:'Parry.png'},
+  {n:'Ramky',               f:'Ramky.png'},
+  {n:'RIL',                 f:'RIL.png'},
+  {n:'RSB',                 f:'RSB.png'},
+  {n:'Sancta Maria School', f:'Sancta maria international school - ISP emerging next to it.png'},
+  {n:'Sankara Eye Hospital',f:'Sankara Eye Hospital.png'},
+  {n:'Sensacore',           f:'Sensacore.png'},
+  {n:'SMR',                 f:'SMR.png'},
+  {n:'Techwave',            f:'Techwave.png'},
+  {n:'Tek Ninjas',          f:'Tek Ninjas.png'},
+  {n:'Telluri',             f:'Telluri.png'},
+  {n:'Tenon FM',            f:'Tenon_fm_logo.png'},
+  {n:'Value Zone',          f:'Value Zone.png'},
+  {n:'Zero40',              f:'Zero40.png'},
+];
+const mt=document.getElementById('mtrack');
+const mt2=document.getElementById('mtrack2');
+const mid=Math.ceil(clients.length/2);
+const row1=clients.slice(0,mid);
+const row2=clients.slice(mid);
+[...row1,...row1].forEach(c=>{
+  const t=document.createElement('div');
+  t.className='cl-tile';
+  t.innerHTML=`<img src="clients/${encodeURIComponent(c.f)}" alt="${c.n}"><span class="cl-fb">${c.n}</span>`;
+  mt.appendChild(t);
+});
+[...row2,...row2].forEach(c=>{
+  const t=document.createElement('div');
+  t.className='cl-tile';
+  t.innerHTML=`<img src="clients/${encodeURIComponent(c.f)}" alt="${c.n}"><span class="cl-fb">${c.n}</span>`;
+  mt2.appendChild(t);
+});
+
+/* protect */
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if(
+    e.key==='F12'||
+    (e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key.toUpperCase()))||
+    (e.ctrlKey&&['U','S','A'].includes(e.key.toUpperCase()))||
+    (e.metaKey&&e.altKey&&['I','J','C'].includes(e.key.toUpperCase()))||
+    (e.metaKey&&['U','S'].includes(e.key.toUpperCase()))
+  ){e.preventDefault();return false;}
+});
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('selectstart',e=>e.preventDefault());
+
+/* form */
+function doSubmit(e){
+  e.preventDefault();
+  const form=e.target;
+  const b=form.querySelector('button[type="submit"]');
+  b.disabled=true;
+  b.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>Sending…';
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams(new FormData(form)).toString()})
+    .then(()=>{
+      b.innerHTML='<i class="fa-solid fa-check"></i>Request Sent!';
+      b.style.background='#16a34a';
+      form.reset();
+      setTimeout(()=>{b.innerHTML='<i class="fa-solid fa-paper-plane"></i>Send Request';b.style.background='';b.disabled=false;},3500);
+    })
+    .catch(()=>{
+      b.innerHTML='<i class="fa-solid fa-xmark"></i>Failed — try again';
+      b.style.background='#dc2626';
+      b.disabled=false;
+    });
+}
+</script>
+</body>
+</html>
