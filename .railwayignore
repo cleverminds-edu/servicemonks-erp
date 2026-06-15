@@ -1,0 +1,6 @@
+SM/
+frontend/
+*.md
+Treatment & Chemical.xlsx
+docker-compose.yml
+.gitignore
