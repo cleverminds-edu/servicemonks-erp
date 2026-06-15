@@ -109,7 +109,7 @@ export default function Login() {
                   required
                   value={empId}
                   onChange={(e) => setEmpId(e.target.value.toUpperCase())}
-                  placeholder="e.g. SM001"
+                  placeholder="e.g. SM000"
                   autoComplete="username"
                   className="w-full border-2 border-gray-200 rounded-2xl pl-11 pr-4 py-3.5
                     text-sm font-mono tracking-widest uppercase bg-white
