@@ -3,17 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { IdCard, Lock, ArrowRight } from "lucide-react";
 
-const QUICK_LOGINS = [
-  { label: "Admin",               empId: "SM001", role: "admin" },
-  { label: "Manager",             empId: "SM002", role: "manager" },
-  { label: "Technician — Suresh", empId: "SM003", role: "technician" },
-];
-
-const ROLE_PILL = {
-  admin:      "bg-purple-100 text-purple-700",
-  manager:    "bg-blue-100 text-blue-700",
-  technician: "bg-yellow-100 text-yellow-800",
-};
 
 export default function Login() {
   const { login }  = useAuth();
@@ -177,35 +166,6 @@ export default function Login() {
               )}
             </button>
           </form>
-
-          {/* Quick logins (dev/demo) */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-              Demo accounts
-            </p>
-            <div className="space-y-2">
-              {QUICK_LOGINS.map(({ label, empId: id, role }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => { setEmpId(id); setPassword("demo"); }}
-                  className="w-full flex items-center justify-between px-4 py-3 border-2 border-gray-100
-                    rounded-2xl hover:border-[#F5C800] hover:bg-[#F5C800]/5
-                    transition-all group cursor-pointer"
-                >
-                  <div className="text-left">
-                    <p className="text-sm font-semibold text-gray-800 group-hover:text-[#1a1a1a]">
-                      {label}
-                    </p>
-                    <p className="text-xs font-mono text-gray-400">{id}</p>
-                  </div>
-                  <span className={`text-xs px-2.5 py-1 rounded-full font-semibold capitalize ${ROLE_PILL[role]}`}>
-                    {role}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
 
           <p className="text-center text-xs text-gray-400 mt-8">
             © {new Date().getFullYear()} Service Monks Integrated Solutions Private Limited
