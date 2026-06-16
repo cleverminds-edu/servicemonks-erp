@@ -152,7 +152,7 @@ app.include_router(hr.router, prefix="/api/hr", tags=["hr"])
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
-@app.get("/health")
+@app.get("/api/health")
 def health():
     """Comprehensive health check endpoint"""
     health_status = {
