@@ -1,10 +1,13 @@
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import logging
 
 import aiosmtplib
 
 from ..config import settings
+
+logger = logging.getLogger(__name__)
 
 
 async def send_completion_email(
@@ -17,8 +20,18 @@ async def send_completion_email(
     job_id: int,
     pdf_path: str,
 ) -> bool:
-    if not settings.smtp_user or not settings.smtp_password or not settings.notification_email:
+    # Check SMTP configuration
+    if not settings.smtp_user:
+        logger.warning(f"[EMAIL] SMTP_USER not configured - email not sent for job {job_id}")
         return False
+    if not settings.smtp_password:
+        logger.warning(f"[EMAIL] SMTP_PASSWORD not configured - email not sent for job {job_id}")
+        return False
+    if not settings.notification_email:
+        logger.warning(f"[EMAIL] NOTIFICATION_EMAIL not configured - email not sent for job {job_id}")
+        return False
+
+    logger.info(f"[EMAIL] Starting email send for job {job_id} to {settings.notification_email}")
 
     msg = MIMEMultipart()
     msg["From"]    = f"{settings.smtp_from_name} <{settings.smtp_user}>"
@@ -90,6 +103,7 @@ async def send_completion_email(
         msg.attach(attachment)
 
     try:
+        logger.info(f"[EMAIL] Connecting to SMTP {settings.smtp_host}:{settings.smtp_port}")
         await aiosmtplib.send(
             msg,
             hostname=settings.smtp_host,
@@ -99,7 +113,8 @@ async def send_completion_email(
             use_tls=settings.smtp_port == 465,
             start_tls=settings.smtp_port == 587,
         )
+        logger.info(f"[EMAIL] ✓ Email sent successfully for job {job_id} to {settings.notification_email}")
         return True
     except Exception as e:
-        print(f"[email] send failed: {e}")
+        logger.error(f"[EMAIL] ✗ Failed to send email for job {job_id}: {type(e).__name__}: {str(e)}", exc_info=True)
         return False

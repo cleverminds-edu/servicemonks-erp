@@ -33,8 +33,10 @@ async def _generate_and_send_completion(
 ):
     """Background task to generate PDF and send email"""
     try:
+        logger.info(f"[BG] ★ BACKGROUND TASK STARTED for job {job_id}")
+
         # Generate PDF
-        logger.info(f"[BG] Generating PDF for job {job_id}")
+        logger.info(f"[BG] Step 1: Generating PDF for job {job_id}...")
         pdf_path = generate_completion_pdf(
             job_id=job_id,
             customer_name=customer_name,
@@ -48,11 +50,11 @@ async def _generate_and_send_completion(
             remarks=remarks,
             signature_base64=signature_base64,
         )
-        logger.info(f"[BG] PDF generated: {pdf_path}")
+        logger.info(f"[BG] ✓ Step 1 OK: PDF generated at {pdf_path}")
 
         # Send email
-        logger.info(f"[BG] Sending email for job {job_id}")
-        await send_completion_email(
+        logger.info(f"[BG] Step 2: Sending email for job {job_id}...")
+        email_result = await send_completion_email(
             customer_name=customer_name,
             customer_email=customer_email,
             service_name=service_name,
@@ -61,9 +63,15 @@ async def _generate_and_send_completion(
             job_id=job_id,
             pdf_path=pdf_path,
         )
-        logger.info(f"[BG] Email sent for job {job_id}")
+
+        if email_result:
+            logger.info(f"[BG] ✓ Step 2 OK: Email sent successfully")
+            logger.info(f"[BG] ★ BACKGROUND TASK COMPLETED for job {job_id}")
+        else:
+            logger.warning(f"[BG] ⚠ Step 2 WARNING: Email returned False (check SMTP config)")
+
     except Exception as e:
-        logger.error(f"[BG] Failed to generate/send completion for job {job_id}: {str(e)}", exc_info=True)
+        logger.error(f"[BG] ✗ BACKGROUND TASK FAILED for job {job_id}: {type(e).__name__}: {str(e)}", exc_info=True)
 
 
 def _load_job(db, job_id):
