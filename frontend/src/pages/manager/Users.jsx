@@ -31,9 +31,15 @@ function UserForm({ onSave, onClose, existing }) {
     setSaving(true);
     setError("");
     try {
-      const data = existing
-        ? await updateUser(existing.id, { name: form.name, phone: form.phone, role: form.role })
-        : await createUser(form);
+      const payload = existing
+        ? { name: form.name, phone: form.phone, role: form.role }
+        : {
+            name: form.name,
+            email: form.email || null,
+            phone: form.phone || null,
+            role: form.role,
+          };
+      const data = existing ? await updateUser(existing.id, payload) : await createUser(payload);
       onSave(data);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to save");
