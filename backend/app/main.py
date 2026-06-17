@@ -17,7 +17,7 @@ from .config import settings
 from .database import Base, engine, SessionLocal
 from .routers import auth, conveyance, customers, hr, jobs, services, tracking, users
 from .models import attendance  # noqa: F401 — register with Base
-from .utils.seed import seed_service_types, seed_admin_user, ensure_attendance_schema
+from .utils.seed import seed_service_types, seed_admin_user, ensure_schema
 
 # Setup logging
 logging.basicConfig(
@@ -143,7 +143,7 @@ def startup():
 
     # Ensure schema is up-to-date
     try:
-        ensure_attendance_schema()
+        ensure_schema()
     except Exception as e:
         logger.warning(f"Schema update warning: {type(e).__name__}: {str(e)}")
 

@@ -18,20 +18,33 @@ router = APIRouter()
 @limiter.limit("5/minute")
 def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     try:
+        logger.info(f"Login attempt for: {body.employee_id}")
         user = (
             db.query(User)
             .filter(User.employee_id == body.employee_id.upper(), User.is_active == True)
             .first()
         )
-        if not user or not verify_password(body.password, user.password_hash):
-            logger.warning(f"Failed login attempt for employee_id: {body.employee_id}")
+        if not user:
+            logger.warning(f"User not found: {body.employee_id}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid Employee ID or password",
             )
 
+        logger.info(f"User found: {user.employee_id}, verifying password")
+        if not verify_password(body.password, user.password_hash):
+            logger.warning(f"Invalid password for: {body.employee_id}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid Employee ID or password",
+            )
+
+        logger.info(f"Creating token for: {user.employee_id}")
         token = create_access_token({"sub": str(user.id)})
-        logger.info(f"Successful login: {user.employee_id}")
+
+        pwd_changed = getattr(user, 'password_changed', False)
+        logger.info(f"Successful login: {user.employee_id}, password_changed={pwd_changed}")
+
         return Token(
             access_token=token,
             user_id=user.id,
@@ -39,7 +52,7 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
             name=user.name,
             role=user.role,
             email=user.email or "",
-            password_changed=getattr(user, 'password_changed', False),
+            password_changed=pwd_changed,
         )
     except HTTPException:
         raise

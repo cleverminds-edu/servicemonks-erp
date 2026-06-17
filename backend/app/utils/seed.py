@@ -27,14 +27,20 @@ SERVICE_TYPES = [
 ]
 
 
-def ensure_attendance_schema():
-    """Drop and recreate attendance table to ensure new columns exist"""
+def ensure_schema():
+    """Ensure all tables have required columns"""
     try:
+        # Drop and recreate attendance table to ensure new columns exist
         Attendance.__table__.drop(engine, checkfirst=True)
         Attendance.__table__.create(engine)
         logger.info("✓ Attendance table schema updated")
+
+        # Recreate users table to ensure password_changed column exists
+        User.__table__.drop(engine, checkfirst=True)
+        User.__table__.create(engine)
+        logger.info("✓ Users table schema updated")
     except Exception as e:
-        logger.warning(f"Could not update attendance table schema: {e}")
+        logger.warning(f"Could not update schema: {e}")
 
 
 def seed_service_types():
