@@ -30,19 +30,23 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
                 detail="Invalid Employee ID or password",
             )
 
-        existing_attendance = (
-            db.query(Attendance)
-            .filter(Attendance.user_id == user.id, Attendance.date == date.today())
-            .first()
-        )
-        if not existing_attendance:
-            attendance = Attendance(
-                user_id=user.id,
-                date=date.today(),
-                status=AttendanceStatus.PRESENT,
+        try:
+            existing_attendance = (
+                db.query(Attendance)
+                .filter(Attendance.user_id == user.id, Attendance.date == date.today())
+                .first()
             )
-            db.add(attendance)
-            db.commit()
+            if not existing_attendance:
+                attendance = Attendance(
+                    user_id=user.id,
+                    date=date.today(),
+                    status=AttendanceStatus.PRESENT,
+                )
+                db.add(attendance)
+                db.commit()
+        except Exception as e:
+            logger.warning(f"Failed to mark attendance for {user.employee_id}: {str(e)}")
+            db.rollback()
 
         token = create_access_token({"sub": str(user.id)})
         logger.info(f"Successful login: {user.employee_id}")
@@ -53,7 +57,7 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
             name=user.name,
             role=user.role,
             email=user.email or "",
-            password_changed=user.password_changed,
+            password_changed=getattr(user, 'password_changed', False),
         )
     except HTTPException:
         raise

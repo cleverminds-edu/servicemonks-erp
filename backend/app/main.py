@@ -17,7 +17,7 @@ from .config import settings
 from .database import Base, engine, SessionLocal
 from .routers import auth, conveyance, customers, hr, jobs, services, tracking, users
 from .models import attendance  # noqa: F401 — register with Base
-from .utils.seed import seed_service_types, seed_admin_user
+from .utils.seed import seed_service_types, seed_admin_user, ensure_attendance_schema
 
 # Setup logging
 logging.basicConfig(
@@ -140,6 +140,12 @@ def startup():
     except Exception as e:
         logger.error(f"✗ Failed to create upload directories: {str(e)}")
         raise RuntimeError("Cannot create upload directories") from e
+
+    # Ensure schema is up-to-date
+    try:
+        ensure_attendance_schema()
+    except Exception as e:
+        logger.warning(f"Schema update warning: {type(e).__name__}: {str(e)}")
 
     # Seed data
     try:

@@ -1,6 +1,7 @@
-from ..database import SessionLocal
+from ..database import SessionLocal, engine, Base
 from ..models.service import ServiceType
 from ..models.user import User, UserRole
+from ..models.attendance import Attendance
 from .auth import hash_password
 import logging
 
@@ -24,6 +25,16 @@ SERVICE_TYPES = [
     ("Stored Pest Insects",           "Specialized Treatments"),
     ("Weed Control",                  "Specialized Treatments"),
 ]
+
+
+def ensure_attendance_schema():
+    """Drop and recreate attendance table to ensure new columns exist"""
+    try:
+        Attendance.__table__.drop(engine, checkfirst=True)
+        Attendance.__table__.create(engine)
+        logger.info("✓ Attendance table schema updated")
+    except Exception as e:
+        logger.warning(f"Could not update attendance table schema: {e}")
 
 
 def seed_service_types():
