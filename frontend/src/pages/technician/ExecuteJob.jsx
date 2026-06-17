@@ -145,16 +145,18 @@ export default function ExecuteJob() {
     setSubmitting(true);
 
     try {
-      await submitJob(id, {
+      console.log("Submitting job...");
+      const response = await submitJob(id, {
         checkout_lat: checkoutPos.lat,
         checkout_lng: checkoutPos.lng,
         products_used: allProducts,
         remarks,
         signature_data: signatureData,
       });
-
+      console.log("Job submitted successfully:", response);
       setDone(true);
     } catch (err) {
+      console.error("Submission error:", err);
       alert(err.response?.data?.detail || "Submission failed. Please try again.");
     } finally {
       setSubmitting(false);
