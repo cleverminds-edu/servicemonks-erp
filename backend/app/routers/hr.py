@@ -27,6 +27,11 @@ class AttendanceIn(BaseModel):
     notes: Optional[str] = None
 
 
+class AttendanceLocationIn(BaseModel):
+    latitude: float
+    longitude: float
+
+
 class AttendanceOut(BaseModel):
     id: int
     user_id: int
@@ -167,6 +172,26 @@ def today_attendance(
         Attendance.date == today,
     ).first()
     return {"status": record.status if record else None, "date": str(today)}
+
+
+@router.post("/attendance/location")
+def update_attendance_location(
+    body: AttendanceLocationIn,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    today = date.today()
+    record = db.query(Attendance).filter(
+        Attendance.user_id == current_user.id,
+        Attendance.date == today,
+    ).first()
+    if not record:
+        raise HTTPException(status_code=404, detail="No attendance record for today")
+
+    record.latitude = body.latitude
+    record.longitude = body.longitude
+    db.commit()
+    return {"detail": "Location updated"}
 
 
 # ── Holidays ──────────────────────────────────────────────────────────────────

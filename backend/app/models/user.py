@@ -22,6 +22,7 @@ class User(Base):
     email = Column(String(150), unique=True, index=True, nullable=True)
     phone = Column(String(20))
     password_hash = Column(String(255), nullable=False)
+    password_changed = Column(Boolean, default=False)
     role = Column(Enum(UserRole), nullable=False, default=UserRole.TECHNICIAN)
     is_active = Column(Boolean, default=True)
     monthly_salary = Column(Integer, nullable=True)

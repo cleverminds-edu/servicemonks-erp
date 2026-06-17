@@ -1,8 +1,93 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { IdCard, Lock, ArrowRight } from "lucide-react";
+import { IdCard, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import Modal from "../components/Modal";
+import { changePassword } from "../api/auth";
+import client from "../api/client";
 
+function PasswordChangeModal({ user, onSuccess }) {
+  const [current, setCurrent] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const captureLocation = async () => {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              await client.post("/hr/attendance/location", {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+            } catch {
+              // Silent fail for location update
+            }
+            resolve();
+          },
+          () => resolve() // Silent fail for geolocation error
+        );
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (newPass !== confirm) {
+      setError("Passwords do not match");
+      return;
+    }
+    if (newPass.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    setLoading(true);
+    try {
+      await changePassword(current, newPass);
+      await captureLocation();
+      onSuccess();
+    } catch (err) {
+      setError(err.response?.data?.detail || "Failed to change password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Modal title="Change Your Password" onClose={() => {}}>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <p className="text-sm text-gray-600 mb-4">
+          Welcome {user.name}! Please change your password before continuing.
+        </p>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Current Password</label>
+          <input type="password" required value={current} onChange={(e) => setCurrent(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">New Password</label>
+          <input type="password" required value={newPass} onChange={(e) => setNewPass(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Confirm Password</label>
+          <input type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+        </div>
+        {error && <p className="text-sm text-red-600">{error}</p>}
+        <button type="submit" disabled={loading}
+          className="w-full bg-brand-700 text-white rounded-lg py-2 text-sm font-medium disabled:opacity-60">
+          {loading ? "Changing..." : "Change Password"}
+        </button>
+      </form>
+    </Modal>
+  );
+}
 
 export default function Login() {
   const { login }  = useAuth();
@@ -11,6 +96,32 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError]       = useState("");
   const [loading, setLoading]   = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [needsPasswordChange, setNeedsPasswordChange] = useState(false);
+  const [loginUser, setLoginUser] = useState(null);
+
+  const captureLocation = async () => {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              await client.post("/hr/attendance/location", {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+            } catch {
+              // Silent fail for location update
+            }
+            resolve();
+          },
+          () => resolve() // Silent fail for geolocation error
+        );
+      } else {
+        resolve();
+      }
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,13 +129,28 @@ export default function Login() {
     setLoading(true);
     try {
       const u = await login(empId, password);
-      navigate(u.role === "technician" ? "/technician/jobs" : "/manager/dashboard");
+      await captureLocation();
+      if (!u.password_changed) {
+        setLoginUser(u);
+        setNeedsPasswordChange(true);
+      } else {
+        navigate(u.role === "technician" ? "/technician/jobs" : "/manager/dashboard");
+      }
     } catch {
       setError("Invalid Employee ID or password. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (needsPasswordChange && loginUser) {
+    return (
+      <PasswordChangeModal
+        user={loginUser}
+        onSuccess={() => navigate(loginUser.role === "technician" ? "/technician/jobs" : "/manager/dashboard")}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row font-sans">
@@ -127,17 +253,24 @@ export default function Login() {
               <div className="relative">
                 <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  className="w-full border-2 border-gray-200 rounded-2xl pl-11 pr-4 py-3.5
+                  className="w-full border-2 border-gray-200 rounded-2xl pl-11 pr-11 py-3.5
                     text-sm bg-white
                     focus:outline-none focus:border-[#F5C800] focus:ring-4 focus:ring-[#F5C800]/20
                     transition-all"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 

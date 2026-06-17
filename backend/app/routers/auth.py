@@ -1,11 +1,13 @@
 import logging
+from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models.user import User
-from ..schemas.auth import LoginRequest, Token
-from ..utils.auth import create_access_token, get_current_user, verify_password
+from ..models.attendance import Attendance
+from ..schemas.auth import LoginRequest, Token, ChangePasswordRequest
+from ..utils.auth import create_access_token, get_current_user, verify_password, hash_password
 from ..middleware.rate_limit import limiter
 
 logger = logging.getLogger(__name__)
@@ -28,6 +30,20 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
                 detail="Invalid Employee ID or password",
             )
 
+        existing_attendance = (
+            db.query(Attendance)
+            .filter(Attendance.user_id == user.id, Attendance.date == date.today())
+            .first()
+        )
+        if not existing_attendance:
+            attendance = Attendance(
+                user_id=user.id,
+                date=date.today(),
+                status="present",
+            )
+            db.add(attendance)
+            db.commit()
+
         token = create_access_token({"sub": str(user.id)})
         logger.info(f"Successful login: {user.employee_id}")
         return Token(
@@ -37,6 +53,7 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
             name=user.name,
             role=user.role,
             email=user.email or "",
+            password_changed=user.password_changed,
         )
     except HTTPException:
         raise
@@ -57,4 +74,33 @@ def me(current_user: User = Depends(get_current_user)):
         "email": current_user.email,
         "role": current_user.role,
         "phone": current_user.phone,
+        "password_changed": current_user.password_changed,
     }
+
+
+@router.post("/change-password")
+def change_password(
+    body: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        if not verify_password(body.current_password, current_user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Current password is incorrect",
+            )
+
+        current_user.password_hash = hash_password(body.new_password)
+        current_user.password_changed = True
+        db.commit()
+        logger.info(f"Password changed for: {current_user.employee_id}")
+        return {"message": "Password changed successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Password change error: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error",
+        )

@@ -18,6 +18,7 @@ export function AuthProvider({ children }) {
       name: data.name,
       role: data.role,
       email: data.email,
+      password_changed: data.password_changed,
     };
     localStorage.setItem("user", JSON.stringify(u));
     setUser(u);

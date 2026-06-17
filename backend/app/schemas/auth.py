@@ -6,6 +6,11 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -14,3 +19,4 @@ class Token(BaseModel):
     name: str
     role: str
     email: str
+    password_changed: bool
