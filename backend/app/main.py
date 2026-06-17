@@ -48,20 +48,30 @@ app.state.limiter = limiter
 
 # Security middleware - restrict to allowed origins only
 allowed_origins = [origin.strip() for origin in settings.allowed_origins.split(",")]
+
+# Convert URLs to domain names for TrustedHostMiddleware
+trusted_hosts = []
+for origin in allowed_origins:
+    # Remove https:// or http:// prefix if present
+    domain = origin.replace("https://", "").replace("http://", "").split("/")[0]
+    trusted_hosts.append(domain)
+
+# CORS middleware (needs full URLs)
+cors_origins = [origin if "://" in origin else f"https://{origin}" for origin in allowed_origins]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
     max_age=3600,
 )
 
-# Trusted host middleware
+# Trusted host middleware (needs domain names only)
 if settings.environment == "production":
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=allowed_origins,
+        allowed_hosts=trusted_hosts,
     )
 
 # Rate limit exceeded handler
