@@ -33,7 +33,7 @@ function UserForm({ onSave, onClose, existing }) {
     try {
       const data = existing
         ? await updateUser(existing.id, { name: form.name, phone: form.phone, role: form.role })
-        : await createUser({ ...form, employee_id: form.employee_id?.toUpperCase() });
+        : await createUser(form);
       onSave(data);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to save");
