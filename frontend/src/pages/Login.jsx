@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { IdCard, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Modal from "../components/Modal";
-import { changePassword } from "../api/auth";
+import { changePassword, markAttendance } from "../api/auth";
 import client from "../api/client";
 
 function PasswordChangeModal({ user, onSuccess }) {
@@ -49,7 +49,11 @@ function PasswordChangeModal({ user, onSuccess }) {
     setLoading(true);
     try {
       await changePassword(current, newPass);
-      await captureLocation();
+
+      // Mark attendance and capture location in background
+      markAttendance();
+      captureLocation();
+
       onSuccess();
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to change password");
@@ -129,7 +133,11 @@ export default function Login() {
     setLoading(true);
     try {
       const u = await login(empId, password);
-      await captureLocation();
+
+      // Mark attendance and capture location in background
+      markAttendance();
+      captureLocation();
+
       if (!u.password_changed) {
         setLoginUser(u);
         setNeedsPasswordChange(true);

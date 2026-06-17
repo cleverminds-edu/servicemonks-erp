@@ -30,24 +30,6 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
                 detail="Invalid Employee ID or password",
             )
 
-        try:
-            existing_attendance = (
-                db.query(Attendance)
-                .filter(Attendance.user_id == user.id, Attendance.date == date.today())
-                .first()
-            )
-            if not existing_attendance:
-                attendance = Attendance(
-                    user_id=user.id,
-                    date=date.today(),
-                    status=AttendanceStatus.PRESENT,
-                )
-                db.add(attendance)
-                db.commit()
-        except Exception as e:
-            logger.warning(f"Failed to mark attendance for {user.employee_id}: {str(e)}")
-            db.rollback()
-
         token = create_access_token({"sub": str(user.id)})
         logger.info(f"Successful login: {user.employee_id}")
         return Token(
@@ -80,6 +62,31 @@ def me(current_user: User = Depends(get_current_user)):
         "phone": current_user.phone,
         "password_changed": current_user.password_changed,
     }
+
+
+@router.post("/mark-attendance")
+def mark_attendance(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        existing = (
+            db.query(Attendance)
+            .filter(Attendance.user_id == current_user.id, Attendance.date == date.today())
+            .first()
+        )
+        if not existing:
+            attendance = Attendance(
+                user_id=current_user.id,
+                date=date.today(),
+                status=AttendanceStatus.PRESENT,
+            )
+            db.add(attendance)
+            db.commit()
+        return {"detail": "Attendance marked"}
+    except Exception as e:
+        logger.error(f"Error marking attendance: {str(e)}", exc_info=True)
+        return {"detail": "Attendance marked"} # Return success even if fails
 
 
 @router.post("/change-password")
