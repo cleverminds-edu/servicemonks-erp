@@ -14,6 +14,12 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+@router.post("/test")
+def test_endpoint(body: LoginRequest):
+    """Test if POST requests work"""
+    return {"message": "POST works", "received_id": body.employee_id}
+
+
 @router.post("/login", response_model=Token)
 def login(body: LoginRequest, db: Session = Depends(get_db)):
     logger.info(f"=== LOGIN START: {body.employee_id} ===")
