@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models.user import User
-from ..models.attendance import Attendance
+from ..models.attendance import Attendance, AttendanceStatus
 from ..schemas.auth import LoginRequest, Token, ChangePasswordRequest
 from ..utils.auth import create_access_token, get_current_user, verify_password, hash_password
 from ..middleware.rate_limit import limiter
@@ -39,7 +39,7 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
             attendance = Attendance(
                 user_id=user.id,
                 date=date.today(),
-                status="present",
+                status=AttendanceStatus.PRESENT,
             )
             db.add(attendance)
             db.commit()
