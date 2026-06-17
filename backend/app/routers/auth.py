@@ -17,39 +17,36 @@ router = APIRouter()
 @router.post("/login", response_model=Token)
 @limiter.limit("5/minute")
 def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
+    logger.info(f"=== LOGIN START: {body.employee_id} ===")
     try:
-        logger.info(f"Login attempt for: {body.employee_id}")
-        user = (
-            db.query(User)
-            .filter(User.employee_id == body.employee_id.upper(), User.is_active == True)
-            .first()
-        )
+        # Step 1: Query user
+        logger.info("Step 1: Querying user...")
+        user = db.query(User).filter(
+            User.employee_id == body.employee_id.upper(),
+            User.is_active == True
+        ).first()
+
         if not user:
-            logger.warning(f"User not found: {body.employee_id}")
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid Employee ID or password",
-            )
+            logger.warning(f"Step 1 FAIL: User not found for {body.employee_id}")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Employee ID or password")
 
-        logger.info(f"User found: {user.employee_id}, verifying password")
+        logger.info(f"Step 1 OK: Found user {user.employee_id}")
+
+        # Step 2: Verify password
+        logger.info("Step 2: Verifying password...")
         if not verify_password(body.password, user.password_hash):
-            logger.warning(f"Invalid password for: {body.employee_id}")
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid Employee ID or password",
-            )
+            logger.warning(f"Step 2 FAIL: Invalid password for {body.employee_id}")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Employee ID or password")
 
-        logger.info(f"Creating token for: {user.employee_id}")
+        logger.info("Step 2 OK: Password verified")
+
+        # Step 3: Create token
+        logger.info("Step 3: Creating token...")
         token = create_access_token({"sub": str(user.id)})
+        logger.info("Step 3 OK: Token created")
 
-        pwd_changed = False
-        try:
-            pwd_changed = user.password_changed if user.password_changed is not None else False
-        except Exception as e:
-            logger.warning(f"Could not read password_changed: {e}")
-
-        logger.info(f"Successful login: {user.employee_id}, password_changed={pwd_changed}")
-
+        # Step 4: Build response
+        logger.info("Step 4: Building response...")
         response = Token(
             access_token=token,
             user_id=user.id,
@@ -57,18 +54,20 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
             name=user.name,
             role=user.role,
             email=user.email or "",
-            password_changed=pwd_changed,
+            password_changed=False,
         )
-        logger.info(f"Returning token response for: {user.employee_id}")
+        logger.info(f"Step 4 OK: Response built, returning")
+        logger.info(f"=== LOGIN SUCCESS: {user.employee_id} ===")
         return response
-    except HTTPException:
+
+    except HTTPException as e:
+        logger.error(f"HTTP Exception: {e.detail}")
         raise
     except Exception as e:
-        logger.error(f"Login error: {str(e)}", exc_info=True)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error",
-        )
+        logger.error(f"=== LOGIN ERROR ===", exc_info=True)
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Error message: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.get("/me")
