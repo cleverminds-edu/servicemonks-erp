@@ -245,17 +245,27 @@ export default function ExecuteJob() {
         {/* Signature */}
         <SignatureCanvas onCapture={setSignatureData} />
 
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t safe-bottom">
+        {/* Submit Section */}
+        <div className="space-y-3 mt-6 mb-6">
+          {!signatureData && (
+            <p className="text-center text-sm text-red-600 bg-red-50 rounded-lg p-3 font-medium">
+              ⚠️ Draw your signature above to enable submit
+            </p>
+          )}
           <button
             type="submit"
             disabled={submitting || !signatureData}
-            className="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-4 rounded-xl text-base transition-colors disabled:opacity-50"
+            className="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-4 rounded-xl text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {submitting ? "Submitting..." : "Submit & Complete Service"}
+            {submitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Submitting...
+              </span>
+            ) : (
+              "✓ Submit & Complete Service"
+            )}
           </button>
-          {!signatureData && (
-            <p className="text-center text-xs text-red-500 mt-2">Capture customer signature to enable submit</p>
-          )}
         </div>
       </form>
     </div>
