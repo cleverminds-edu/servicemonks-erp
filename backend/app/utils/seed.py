@@ -64,11 +64,17 @@ def seed_service_types():
 def seed_admin_user():
     db = SessionLocal()
     try:
-        # Clean up old demo users
+        # Clean up old demo users (delete attendance records first due to FK constraints)
         old_demo_ids = ["SM001", "SM002", "SM003", "SM004", "SM005"]
         for emp_id in old_demo_ids:
-            db.query(User).filter(User.employee_id == emp_id).delete()
-        
+            user = db.query(User).filter(User.employee_id == emp_id).first()
+            if user:
+                # Delete attendance records first
+                db.query(Attendance).filter(Attendance.user_id == user.id).delete()
+                # Then delete the user
+                db.query(User).filter(User.id == user.id).delete()
+                logger.info(f"Cleaned up demo user: {emp_id}")
+
         # Create superuser
         superuser_id = "SM000"
         existing = db.query(User).filter(User.employee_id == superuser_id).first()
