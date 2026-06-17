@@ -141,11 +141,12 @@ def startup():
         logger.error(f"✗ Failed to create upload directories: {str(e)}")
         raise RuntimeError("Cannot create upload directories") from e
 
-    # Ensure schema is up-to-date
-    try:
-        ensure_schema()
-    except Exception as e:
-        logger.warning(f"Schema update warning: {type(e).__name__}: {str(e)}")
+    # Note: Schema recreation disabled to prevent data loss
+    # Uncomment only if needed for schema updates
+    # try:
+    #     ensure_schema()
+    # except Exception as e:
+    #     logger.warning(f"Schema update warning: {type(e).__name__}: {str(e)}")
 
     # Seed data
     try:
