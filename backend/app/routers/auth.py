@@ -14,6 +14,23 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+@router.get("/debug/users")
+def debug_users(db: Session = Depends(get_db)):
+    """Debug endpoint to check what users exist"""
+    try:
+        users = db.query(User).all()
+        return {
+            "count": len(users),
+            "users": [
+                {"id": u.id, "employee_id": u.employee_id, "name": u.name, "is_active": u.is_active}
+                for u in users
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Debug error: {e}", exc_info=True)
+        return {"error": str(e)}
+
+
 @router.post("/test")
 def test_endpoint(body: LoginRequest):
     """Test if POST requests work"""
