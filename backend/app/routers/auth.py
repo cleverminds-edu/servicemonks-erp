@@ -15,8 +15,7 @@ router = APIRouter()
 
 
 @router.post("/login", response_model=Token)
-@limiter.limit("5/minute")
-def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
+def login(body: LoginRequest, db: Session = Depends(get_db)):
     logger.info(f"=== LOGIN START: {body.employee_id} ===")
     try:
         # Step 1: Query user
