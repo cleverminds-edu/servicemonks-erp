@@ -35,7 +35,7 @@ function UserForm({ onSave, onClose, existing }) {
         ? { name: form.name, phone: form.phone, role: form.role }
         : {
             name: form.name,
-            email: form.email || null,
+            email: form.email,
             phone: form.phone || null,
             role: form.role,
           };
@@ -57,8 +57,8 @@ function UserForm({ onSave, onClose, existing }) {
       </div>
       {!existing && (
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
-          <input type="email" value={form.email} onChange={(e) => set("email", e.target.value)}
+          <label className="block text-xs font-medium text-gray-700 mb-1">Email *</label>
+          <input required type="email" value={form.email} onChange={(e) => set("email", e.target.value)}
             className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
         </div>
       )}
