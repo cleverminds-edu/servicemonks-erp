@@ -131,12 +131,15 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
+    console.log("Login attempt:", empId);
     try {
+      console.log("Calling login API...");
       const u = await login(empId, password);
+      console.log("Login successful:", u);
 
       // Mark attendance and capture location in background
-      markAttendance();
-      captureLocation();
+      markAttendance().catch(err => console.log("Attendance error:", err));
+      captureLocation().catch(err => console.log("Location error:", err));
 
       if (!u.password_changed) {
         setLoginUser(u);
@@ -144,8 +147,9 @@ export default function Login() {
       } else {
         navigate(u.role === "technician" ? "/technician/jobs" : "/manager/dashboard");
       }
-    } catch {
-      setError("Invalid Employee ID or password. Please try again.");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError(err.response?.data?.detail || err.message || "Invalid Employee ID or password. Please try again.");
     } finally {
       setLoading(false);
     }
