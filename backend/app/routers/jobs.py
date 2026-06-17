@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, date
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 
 from ..database import get_db
@@ -15,6 +15,55 @@ from ..utils.email_sender import send_completion_email
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+
+async def _generate_and_send_completion(
+    job_id: int,
+    customer_name: str,
+    customer_address: str,
+    customer_email: str,
+    service_name: str,
+    technician_name: str,
+    checkin_time,
+    checkout_time,
+    products_used: str,
+    remarks: str,
+    signature_base64: str,
+    scheduled_date: str,
+):
+    """Background task to generate PDF and send email"""
+    try:
+        # Generate PDF
+        logger.info(f"[BG] Generating PDF for job {job_id}")
+        pdf_path = generate_completion_pdf(
+            job_id=job_id,
+            customer_name=customer_name,
+            customer_address=customer_address,
+            customer_email=customer_email,
+            service_name=service_name,
+            technician_name=technician_name,
+            checkin_time=checkin_time,
+            checkout_time=checkout_time,
+            products_used=products_used,
+            remarks=remarks,
+            signature_base64=signature_base64,
+        )
+        logger.info(f"[BG] PDF generated: {pdf_path}")
+
+        # Send email
+        logger.info(f"[BG] Sending email for job {job_id}")
+        await send_completion_email(
+            customer_name=customer_name,
+            customer_email=customer_email,
+            service_name=service_name,
+            technician_name=technician_name,
+            scheduled_date=scheduled_date,
+            job_id=job_id,
+            pdf_path=pdf_path,
+        )
+        logger.info(f"[BG] Email sent for job {job_id}")
+    except Exception as e:
+        logger.error(f"[BG] Failed to generate/send completion for job {job_id}: {str(e)}", exc_info=True)
 
 
 def _load_job(db, job_id):
@@ -165,6 +214,7 @@ def checkin(
 async def submit_job(
     job_id: int,
     body: JobExecutionSubmit,
+    background_tasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -205,60 +255,27 @@ async def submit_job(
             db.add(execution)
             db.flush()
 
-        # Generate PDF
-        pdf_path = None
-        try:
-            logger.info(f"Generating PDF for job {job_id}")
-            pdf_path = generate_completion_pdf(
-                job_id=job_id,
-                customer_name=job.customer.name,
-                customer_address=job.customer.address,
-                customer_email=job.customer.email or "",
-                service_name=job.service_type.name,
-                technician_name=job.technician.name if job.technician else current_user.name,
-                checkin_time=execution.checkin_time,
-                checkout_time=execution.checkout_time,
-                products_used=body.products_used or "",
-                remarks=body.remarks or "",
-                signature_base64=body.signature_data,
-            )
-            execution.pdf_path = pdf_path
-            logger.info(f"PDF generated successfully: {pdf_path}")
-        except Exception as pdf_error:
-            logger.error(f"PDF generation failed for job {job_id}: {str(pdf_error)}", exc_info=True)
-            # Continue with email even if PDF fails - mark for manual review
-            execution.pdf_path = None
-            execution.remarks = f"{execution.remarks}\n[PDF generation failed - manual review needed]"
-
-        # Update job status
+        # Update job status immediately
         job.status = JobStatus.COMPLETED
         db.commit()
         logger.info(f"Job {job_id} marked as COMPLETED")
 
-        # Send email notification
-        email_sent = False
-        try:
-            logger.info(f"Sending completion email for job {job_id}")
-            email_sent = await send_completion_email(
-                customer_name=job.customer.name,
-                customer_email=job.customer.email or "",
-                service_name=job.service_type.name,
-                technician_name=job.technician.name if job.technician else current_user.name,
-                scheduled_date=str(job.scheduled_date),
-                job_id=job_id,
-                pdf_path=pdf_path,
-            )
-            execution.email_sent = email_sent
-            if email_sent:
-                logger.info(f"Completion email sent for job {job_id}")
-            else:
-                logger.warning(f"Email sending skipped for job {job_id} (likely missing credentials)")
-        except Exception as email_error:
-            logger.error(f"Email send failed for job {job_id}: {str(email_error)}", exc_info=True)
-            execution.email_sent = False
-            # Don't fail the job submission if email fails
-
-        db.commit()
+        # Queue PDF generation and email as background tasks (non-blocking)
+        background_tasks.add_task(
+            _generate_and_send_completion,
+            job_id=job_id,
+            customer_name=job.customer.name,
+            customer_address=job.customer.address,
+            customer_email=job.customer.email or "",
+            service_name=job.service_type.name,
+            technician_name=job.technician.name if job.technician else current_user.name,
+            checkin_time=execution.checkin_time,
+            checkout_time=execution.checkout_time,
+            products_used=body.products_used or "",
+            remarks=body.remarks or "",
+            signature_base64=body.signature_data,
+            scheduled_date=str(job.scheduled_date),
+        )
 
         return {
             "status": "completed",
