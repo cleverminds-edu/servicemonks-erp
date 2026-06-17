@@ -27,7 +27,18 @@ function CustomerForm({ onSave, onClose }) {
     e.preventDefault();
     setSaving(true);
     try {
-      onSave(await createCustomer(form));
+      const payload = {
+        name: form.name,
+        contact_person: form.contact_person || null,
+        phone: form.phone,
+        email: form.email || null,
+        address: form.address,
+        city: form.city || null,
+        pincode: form.pincode || null,
+        sector: form.sector,
+        notes: form.notes || null,
+      };
+      onSave(await createCustomer(payload));
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to save");
     } finally {
