@@ -30,17 +30,23 @@ SERVICE_TYPES = [
 def ensure_schema():
     """Ensure all tables have required columns"""
     try:
-        # Drop and recreate attendance table to ensure new columns exist
+        # Drop dependent tables first (due to foreign keys)
         Attendance.__table__.drop(engine, checkfirst=True)
-        Attendance.__table__.create(engine)
-        logger.info("✓ Attendance table schema updated")
+        logger.info("✓ Dropped Attendance table")
 
-        # Recreate users table to ensure password_changed column exists
+        # Now drop users table
         User.__table__.drop(engine, checkfirst=True)
+        logger.info("✓ Dropped Users table")
+
+        # Recreate in correct order
         User.__table__.create(engine)
-        logger.info("✓ Users table schema updated")
+        logger.info("✓ Recreated Users table")
+
+        Attendance.__table__.create(engine)
+        logger.info("✓ Recreated Attendance table")
+
     except Exception as e:
-        logger.warning(f"Could not update schema: {e}")
+        logger.warning(f"Schema update: {e}")
 
 
 def seed_service_types():

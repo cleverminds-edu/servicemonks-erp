@@ -42,10 +42,15 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
         logger.info(f"Creating token for: {user.employee_id}")
         token = create_access_token({"sub": str(user.id)})
 
-        pwd_changed = getattr(user, 'password_changed', False)
+        pwd_changed = False
+        try:
+            pwd_changed = user.password_changed if user.password_changed is not None else False
+        except Exception as e:
+            logger.warning(f"Could not read password_changed: {e}")
+
         logger.info(f"Successful login: {user.employee_id}, password_changed={pwd_changed}")
 
-        return Token(
+        response = Token(
             access_token=token,
             user_id=user.id,
             employee_id=user.employee_id,
@@ -54,6 +59,8 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
             email=user.email or "",
             password_changed=pwd_changed,
         )
+        logger.info(f"Returning token response for: {user.employee_id}")
+        return response
     except HTTPException:
         raise
     except Exception as e:

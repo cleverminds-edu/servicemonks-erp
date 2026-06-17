@@ -19,4 +19,4 @@ class Token(BaseModel):
     name: str
     role: str
     email: str
-    password_changed: bool
+    password_changed: bool = False
