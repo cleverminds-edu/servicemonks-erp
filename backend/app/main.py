@@ -15,8 +15,8 @@ from slowapi.errors import RateLimitExceeded
 
 from .config import settings
 from .database import Base, engine, SessionLocal
-from .routers import auth, conveyance, customers, hr, jobs, services, tracking, users
-from .models import attendance  # noqa: F401 — register with Base
+from .routers import auth, conveyance, customers, contracts, hr, jobs, services, tracking, users
+from .models import attendance, contract  # noqa: F401 — register with Base
 from .utils.seed import seed_service_types, seed_admin_user, ensure_schema
 
 # Setup logging
@@ -160,6 +160,7 @@ def startup():
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(customers.router, prefix="/api/customers", tags=["customers"])
+app.include_router(contracts.router, prefix="/api", tags=["contracts"])
 app.include_router(services.router, prefix="/api/services", tags=["services"])
 app.include_router(jobs.router, prefix="/api/jobs", tags=["jobs"])
 app.include_router(tracking.router, prefix="/api/tracking", tags=["tracking"])
