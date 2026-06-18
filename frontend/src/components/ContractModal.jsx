@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { X, Plus, Trash2 } from "lucide-react";
-import { getServices } from "../api/services";
+import { getServiceTypes } from "../api/services";
 import { getContract, createOrUpdateContract } from "../api/contracts";
 import Modal from "./Modal";
 
@@ -25,7 +25,7 @@ export default function ContractModal({ customerId, onClose, onSave }) {
       setLoading(true);
       const [contractData, servicesData] = await Promise.all([
         getContract(customerId),
-        getServices(),
+        getServiceTypes(),
       ]);
 
       setServices(servicesData || []);
