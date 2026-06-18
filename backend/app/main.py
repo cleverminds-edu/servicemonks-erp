@@ -16,7 +16,7 @@ from slowapi.errors import RateLimitExceeded
 from .config import settings
 from .database import Base, engine, SessionLocal
 from .routers import auth, conveyance, customers, contracts, hr, jobs, services, tracking, users
-from .models import attendance, contract  # noqa: F401 — register with Base
+from .models import attendance  # noqa: F401 — register with Base
 from .utils.seed import seed_service_types, seed_admin_user, ensure_schema
 
 # Setup logging
