@@ -178,6 +178,7 @@ def health():
         "status": "ok",
         "database": "unknown",
         "environment": settings.environment,
+        "database_url_configured": bool(settings.database_url),
     }
 
     # Check database
@@ -187,9 +188,55 @@ def health():
         db.close()
         health_status["database"] = "ok"
     except Exception as e:
-        logger.error(f"Health check - Database error: {str(e)}")
-        health_status["database"] = "error"
+        logger.error(f"Health check - Database error: {str(e)}", exc_info=True)
+        health_status["database"] = f"error: {type(e).__name__}: {str(e)}"
         health_status["status"] = "degraded"
 
     status_code = 200 if health_status["status"] == "ok" else 503
     return JSONResponse(content=health_status, status_code=status_code)
+
+
+@app.get("/api/v1/diagnostic")
+def diagnostic():
+    """Detailed diagnostic information for debugging"""
+    from .models.user import User
+    from .models.customer import Customer
+    from .models.service import ServiceType
+
+    diag = {
+        "status": "ok",
+        "environment": settings.environment,
+        "database_configured": bool(settings.database_url),
+        "tables": {},
+        "errors": [],
+    }
+
+    db = SessionLocal()
+    try:
+        # Try to count records in each table
+        tables = [
+            ("users", User),
+            ("customers", Customer),
+            ("service_types", ServiceType),
+        ]
+
+        for table_name, model in tables:
+            try:
+                count = db.query(model).count()
+                diag["tables"][table_name] = {"count": count, "status": "ok"}
+            except Exception as e:
+                diag["tables"][table_name] = {
+                    "status": "error",
+                    "error": f"{type(e).__name__}: {str(e)}"
+                }
+                diag["errors"].append(f"{table_name}: {str(e)}")
+    except Exception as e:
+        diag["status"] = "error"
+        diag["errors"].append(f"Session error: {str(e)}")
+    finally:
+        db.close()
+
+    if diag["errors"]:
+        diag["status"] = "error"
+
+    return diag

@@ -1,6 +1,6 @@
 import logging
 from datetime import date
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -8,7 +8,6 @@ from ..models.user import User
 from ..models.attendance import Attendance, AttendanceStatus
 from ..schemas.auth import LoginRequest, Token, ChangePasswordRequest
 from ..utils.auth import create_access_token, get_current_user, verify_password, hash_password
-from ..middleware.rate_limit import limiter
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
