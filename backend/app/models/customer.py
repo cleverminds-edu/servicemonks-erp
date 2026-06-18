@@ -30,5 +30,5 @@ class Customer(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # contracts = relationship("ServiceContract", back_populates="customer")  # Temporarily disabled
+    contracts = relationship("ServiceContract", back_populates="customer")
     jobs = relationship("Job", back_populates="customer")
