@@ -3,9 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getCustomer } from "../../api/customers";
 import { getContracts, createContract, getServiceTypes } from "../../api/services";
 import { getJobs } from "../../api/jobs";
+import { getContract } from "../../api/contracts";
 import { format } from "date-fns";
-import { ArrowLeft, Plus, Phone, Mail, MapPin } from "lucide-react";
+import { ArrowLeft, Plus, Phone, Mail, MapPin, Calendar } from "lucide-react";
 import Modal from "../../components/Modal";
+import ContractModal from "../../components/ContractModal";
 import StatusBadge from "../../components/StatusBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
@@ -98,20 +100,24 @@ export default function CustomerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState(null);
+  const [serviceContract, setServiceContract] = useState(null);
   const [contracts, setContracts] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
   const [showContract, setShowContract] = useState(false);
+  const [showServiceContract, setShowServiceContract] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       getCustomer(id),
+      getContract(id),
       getContracts(id),
       getJobs({ customer_id: id }),
       getServiceTypes(),
-    ]).then(([c, co, j, st]) => {
+    ]).then(([c, sc, co, j, st]) => {
       setCustomer(c);
+      setServiceContract(sc);
       setContracts(co);
       setJobs(j);
       setServiceTypes(st);
@@ -150,6 +156,54 @@ export default function CustomerDetail() {
         {customer.notes && <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded">{customer.notes}</p>}
       </div>
 
+      {/* Services Agreement */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-semibold">Contracted Services</h2>
+          <button onClick={() => setShowServiceContract(true)}
+            className="flex items-center gap-1 text-sm text-brand-700 font-medium">
+            <Plus size={15} /> Manage
+          </button>
+        </div>
+        {serviceContract ? (
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm">
+                <Calendar size={14} className="text-gray-400" />
+                <span className="text-gray-600">
+                  {format(new Date(serviceContract.start_date), "dd MMM yyyy")}
+                  {serviceContract.end_date && ` - ${format(new Date(serviceContract.end_date), "dd MMM yyyy")}`}
+                </span>
+              </div>
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                serviceContract.is_active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
+              }`}>
+                {serviceContract.is_active ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 mb-2 font-medium">Services</p>
+              <div className="flex flex-wrap gap-2">
+                {serviceContract.services.map((service) => (
+                  <span key={service.id} className="text-xs bg-brand-50 text-brand-700 px-2.5 py-1 rounded-full">
+                    {service.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+            <p className="text-sm text-gray-500 mb-2">No services contract defined</p>
+            <button onClick={() => setShowServiceContract(true)}
+              className="text-xs text-brand-700 font-medium hover:underline">
+              Create one now
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Individual Service Contracts */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold">Service Contracts</h2>
@@ -208,6 +262,18 @@ export default function CustomerDetail() {
             onClose={() => setShowContract(false)}
           />
         </Modal>
+      )}
+
+      {showServiceContract && (
+        <ContractModal
+          customerId={parseInt(id)}
+          onClose={() => setShowServiceContract(false)}
+          onSave={async () => {
+            const contract = await getContract(parseInt(id));
+            setServiceContract(contract);
+            setShowServiceContract(false);
+          }}
+        />
       )}
     </div>
   );
