@@ -4,7 +4,8 @@ import { getJobs, createJob, updateJob } from "../../api/jobs";
 import { getCustomers } from "../../api/customers";
 import { getServiceTypes } from "../../api/services";
 import { getUsers } from "../../api/users";
-import { ChevronLeft, ChevronRight, Plus, Pencil, Calendar } from "lucide-react";
+import { getContract } from "../../api/contracts";
+import { ChevronLeft, ChevronRight, Plus, Pencil, Calendar, AlertCircle } from "lucide-react";
 import Modal from "../../components/Modal";
 import StatusBadge from "../../components/StatusBadge";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -21,7 +22,20 @@ function JobForm({ date, customers, serviceTypes, technicians, onSave, onClose, 
     notes:           existing?.notes           || "",
   });
   const [saving, setSaving] = useState(false);
+  const [customerContract, setCustomerContract] = useState(null);
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleCustomerChange = async (customerId) => {
+    set("customer_id", customerId);
+    set("service_type_id", ""); // Reset service when customer changes
+
+    if (customerId) {
+      const contract = await getContract(parseInt(customerId));
+      setCustomerContract(contract);
+    } else {
+      setCustomerContract(null);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,26 +54,45 @@ function JobForm({ date, customers, serviceTypes, technicians, onSave, onClose, 
     }
   };
 
-  const grouped = serviceTypes.reduce((acc, s) => {
+  // Filter services: show contracted services if contract exists, otherwise show all
+  const availableServices = customerContract
+    ? serviceTypes.filter((st) => customerContract.services.some((cs) => cs.id === st.id))
+    : [];
+
+  const grouped = availableServices.reduce((acc, s) => {
     (acc[s.category] = acc[s.category] || []).push(s);
     return acc;
   }, {});
+
+  const isContractRequired = form.customer_id && !customerContract;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Customer *</label>
-        <select value={form.customer_id} onChange={(e) => set("customer_id", e.target.value)} required
+        <select value={form.customer_id} onChange={(e) => handleCustomerChange(e.target.value)} required
           className="w-full border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
           <option value="">Select customer…</option>
           {customers.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
       </div>
+
+      {isContractRequired && (
+        <div className="flex gap-2 items-start bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-700">
+          <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />
+          <span>No service contract defined for this customer. Please set up services first.</span>
+        </div>
+      )}
+
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Service *</label>
-        <select value={form.service_type_id} onChange={(e) => set("service_type_id", e.target.value)} required
-          className="w-full border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-          <option value="">Select service…</option>
+        <select
+          value={form.service_type_id}
+          onChange={(e) => set("service_type_id", e.target.value)}
+          required
+          disabled={!customerContract}
+          className="w-full border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-100 disabled:cursor-not-allowed">
+          <option value="">{customerContract ? "Select service…" : "Select customer first…"}</option>
           {Object.entries(grouped).map(([cat, types]) => (
             <optgroup key={cat} label={cat}>
               {types.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
