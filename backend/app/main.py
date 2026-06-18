@@ -69,10 +69,12 @@ app.add_middleware(
 )
 
 # Trusted host middleware (needs domain names only)
+# When behind a proxy, also accept the proxy's domain
 if settings.environment == "production":
+    trusted_hosts_with_proxy = trusted_hosts + ["servicemonks-erp-production.up.railway.app"]
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=trusted_hosts,
+        allowed_hosts=trusted_hosts_with_proxy,
     )
 
 
