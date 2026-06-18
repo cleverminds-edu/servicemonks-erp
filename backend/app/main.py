@@ -75,6 +75,19 @@ if settings.environment == "production":
         allowed_hosts=trusted_hosts,
     )
 
+
+# HTTPS enforcement middleware
+@app.middleware("http")
+async def enforce_https(request: Request, call_next):
+    response = await call_next(request)
+    if settings.environment == "production":
+        # Force HTTPS and prevent downgrade attacks
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
+
 # Rate limit exceeded handler
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
