@@ -74,25 +74,33 @@ def seed_admin_user():
         #         db.query(User).filter(User.id == user.id).delete()
         #         logger.info(f"Cleaned up demo user: {emp_id}")
 
-        # Create superuser
+        # Create or update superuser (ensure password is always correct)
         superuser_id = "SM000"
         existing = db.query(User).filter(User.employee_id == superuser_id).first()
-        
+
+        correct_password_hash = hash_password("Anupally@123")
+
         if not existing:
             superuser = User(
                 employee_id=superuser_id,
                 name="D S Reddy",
                 email="superuser@servicemonks.com",
                 phone=None,
-                password_hash=hash_password("Anupally@123"),
+                password_hash=correct_password_hash,
                 role=UserRole.ADMIN,
                 is_active=True,
+                password_changed=False,
             )
             db.add(superuser)
             logger.info(f"✓ Created superuser: {superuser_id} (D S Reddy)")
         else:
-            logger.info(f"✓ Superuser {superuser_id} already exists")
-        
+            # Ensure password is correct (in case of seed issues)
+            existing.password_hash = correct_password_hash
+            existing.role = UserRole.ADMIN
+            existing.is_active = True
+            db.merge(existing)
+            logger.info(f"✓ Superuser {superuser_id} password verified/reset")
+
         db.commit()
             
     except Exception as e:
