@@ -11,11 +11,13 @@ contract_services = Table(
     Base.metadata,
     Column("contract_id", Integer, ForeignKey("service_contracts.id", ondelete="CASCADE"), primary_key=True),
     Column("service_id", Integer, ForeignKey("service_types.id", ondelete="CASCADE"), primary_key=True),
+    extend_existing=True,
 )
 
 
 class ServiceContract(Base):
     __tablename__ = "service_contracts"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True, index=True)
     customer_id = Column(Integer, ForeignKey("customers.id", ondelete="CASCADE"), unique=True, nullable=False)
