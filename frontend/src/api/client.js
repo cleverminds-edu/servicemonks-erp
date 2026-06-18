@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const client = axios.create({ baseURL: "/api/" });
+// Use HTTPS backend URL directly to avoid proxy issues
+const client = axios.create({
+  baseURL: "https://servicemonks-erp-production.up.railway.app/api/",
+  withCredentials: true,
+});
 
 client.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
