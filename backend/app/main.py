@@ -37,11 +37,13 @@ if settings.environment == "production":
         version="1.0.0",
         docs_url=None,  # Disable Swagger UI in production
         redoc_url=None,  # Disable ReDoc in production
+        redirect_slashes=False,  # Don't redirect /path to /path/
     )
 else:
     app = FastAPI(
         title="Service Monks Integrated Solutions Private Limited — ERP",
-        version="1.0.0"
+        version="1.0.0",
+        redirect_slashes=False,  # Don't redirect /path to /path/
     )
 
 # Attach limiter to app

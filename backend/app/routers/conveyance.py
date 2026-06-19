@@ -14,7 +14,6 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[ConveyanceResponse])
-@router.get("", response_model=List[ConveyanceResponse])
 def list_claims(
     status: Optional[str] = None,
     db: Session = Depends(get_db),
@@ -29,7 +28,6 @@ def list_claims(
 
 
 @router.post("/", response_model=ConveyanceResponse)
-@router.post("", response_model=ConveyanceResponse)
 def submit_claim(
     body: ConveyanceClaimCreate,
     db: Session = Depends(get_db),

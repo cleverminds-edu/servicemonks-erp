@@ -13,7 +13,6 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[CustomerResponse])
-@router.get("", response_model=List[CustomerResponse])
 def list_customers(
     search: Optional[str] = None,
     sector: Optional[str] = None,
@@ -29,7 +28,6 @@ def list_customers(
 
 
 @router.post("/", response_model=CustomerResponse)
-@router.post("", response_model=CustomerResponse)
 def create_customer(
     body: CustomerCreate,
     db: Session = Depends(get_db),

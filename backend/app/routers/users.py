@@ -11,9 +11,7 @@ from ..utils.auth import get_current_user, hash_password, require_roles
 router = APIRouter()
 
 
-# Handle both /users and /users/ (without trailing slash handler)
 @router.get("/", response_model=List[UserResponse])
-@router.get("", response_model=List[UserResponse])
 def list_users(
     role: str = None,
     db: Session = Depends(get_db),
@@ -26,7 +24,6 @@ def list_users(
 
 
 @router.post("/", response_model=UserResponse)
-@router.post("", response_model=UserResponse)
 def create_user(
     body: UserCreate,
     db: Session = Depends(get_db),

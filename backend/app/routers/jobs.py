@@ -89,7 +89,6 @@ def _load_job(db, job_id):
 
 
 @router.get("/", response_model=List[JobResponse])
-@router.get("", response_model=List[JobResponse])
 def list_jobs(
     scheduled_date: Optional[date] = None,
     technician_id: Optional[int] = None,
@@ -119,7 +118,6 @@ def list_jobs(
 
 
 @router.post("/", response_model=JobResponse)
-@router.post("", response_model=JobResponse)
 def create_job(
     body: JobCreate,
     db: Session = Depends(get_db),
