@@ -6,7 +6,12 @@ const client = axios.create({
   baseURL: "/api/",
 });
 
+// Debug: Log the actual baseURL being used
+console.log("Axios baseURL:", client.defaults.baseURL);
+console.log("Current location:", window.location.origin);
+
 client.interceptors.request.use((config) => {
+  console.log("API Request:", config.method.toUpperCase(), config.baseURL + config.url);
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
