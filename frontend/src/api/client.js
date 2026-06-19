@@ -1,6 +1,7 @@
 import axios from "axios";
 
 // Use relative path through nginx proxy (same domain, no CORS issues)
+// Fixed: 2026-06-19 Mixed Content error - ensuring /api/ relative path
 const client = axios.create({
   baseURL: "/api/",
 });

@@ -1,7 +1,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 # Cache bust to force fresh build with relative /api/ path
-RUN echo "2026-06-19-0910-relative-api-fix"
+RUN echo "2026-06-19-1430-http-mixed-content-fix"
 COPY package*.json ./
 RUN npm ci
 COPY . .
