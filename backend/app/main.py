@@ -67,7 +67,17 @@ async def proxy_headers_middleware(request: Request, call_next):
         request.scope["server"] = (host_parts[0], port)
         logger.info(f"Set server to: {request.scope['server']}")
 
-    return await call_next(request)
+    response = await call_next(request)
+
+    # Fix any HTTP redirects to use HTTPS (for trailing slash redirects from behind proxy)
+    if response.status_code in (301, 302, 303, 307, 308) and x_forwarded_proto == "https":
+        location = response.headers.get("location")
+        if location and location.startswith("http://"):
+            fixed_location = location.replace("http://", "https://", 1)
+            response.headers["location"] = fixed_location
+            logger.info(f"Fixed redirect: {location} -> {fixed_location}")
+
+    return response
 
 # Security middleware - restrict to allowed origins only
 allowed_origins = [origin.strip() for origin in settings.allowed_origins.split(",")]
