@@ -5,7 +5,6 @@ from typing import Optional
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from starlette.middleware.proxy_headers import ProxyHeadersMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import RequestValidationError
@@ -48,8 +47,15 @@ else:
 # Attach limiter to app
 app.state.limiter = limiter
 
-# Trust proxy headers for correct scheme/host in redirects (must be before other middlewares)
-app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=["*"])
+# Custom middleware to fix proxy headers for redirects
+@app.middleware("http")
+async def proxy_headers_middleware(request: Request, call_next):
+    # Trust X-Forwarded-Proto and X-Forwarded-Host from nginx proxy
+    if x_forwarded_proto := request.headers.get("x-forwarded-proto"):
+        request.scope["scheme"] = x_forwarded_proto
+    if x_forwarded_host := request.headers.get("x-forwarded-host"):
+        request.scope["server"] = (x_forwarded_host, request.scope.get("server", ("", 80))[1])
+    return await call_next(request)
 
 # Security middleware - restrict to allowed origins only
 allowed_origins = [origin.strip() for origin in settings.allowed_origins.split(",")]
