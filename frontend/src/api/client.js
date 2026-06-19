@@ -11,7 +11,13 @@ console.log("AXIOSCLIENT-2026-06-19-v2:", client.defaults.baseURL);
 console.log("LOCATION:", window.location.origin);
 
 client.interceptors.request.use((config) => {
-  console.log("API Request:", config.method.toUpperCase(), config.baseURL + config.url);
+  console.log("=== AXIOS REQUEST DEBUG ===");
+  console.log("baseURL:", config.baseURL);
+  console.log("url:", config.url);
+  console.log("method:", config.method);
+  console.log("full path:", config.baseURL + config.url);
+  console.log("client.defaults.baseURL:", client.defaults.baseURL);
+  console.log("=========================");
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
