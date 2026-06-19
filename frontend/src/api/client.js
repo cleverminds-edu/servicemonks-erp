@@ -7,8 +7,8 @@ const client = axios.create({
 });
 
 // Debug: Log the actual baseURL being used
-console.log("Axios baseURL:", client.defaults.baseURL);
-console.log("Current location:", window.location.origin);
+console.log("AXIOSCLIENT-2026-06-19-v2:", client.defaults.baseURL);
+console.log("LOCATION:", window.location.origin);
 
 client.interceptors.request.use((config) => {
   console.log("API Request:", config.method.toUpperCase(), config.baseURL + config.url);
