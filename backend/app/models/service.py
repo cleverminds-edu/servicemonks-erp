@@ -1,10 +1,19 @@
 import enum
 
-from sqlalchemy import Boolean, Column, Date, DateTime, Enum, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Column, Date, DateTime, Enum, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from ..database import Base
+
+# Many-to-many junction table for services in a contract
+contract_services = Table(
+    "contract_services",
+    Base.metadata,
+    Column("contract_id", Integer, ForeignKey("service_contracts.id", ondelete="CASCADE"), primary_key=True),
+    Column("service_id", Integer, ForeignKey("service_types.id", ondelete="CASCADE"), primary_key=True),
+    extend_existing=True,
+)
 
 
 class ServiceFrequency(str, enum.Enum):
@@ -43,4 +52,5 @@ class ServiceContract(Base):
 
     customer = relationship("Customer", back_populates="contracts")
     service_type = relationship("ServiceType")
+    services = relationship("ServiceType", secondary=contract_services, lazy="joined")
     jobs = relationship("Job", back_populates="contract")
