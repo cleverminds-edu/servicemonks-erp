@@ -70,15 +70,18 @@ async def proxy_headers_middleware(request: Request, call_next):
     response = await call_next(request)
 
     # Fix any HTTP redirects to use HTTPS (for trailing slash redirects from behind proxy)
-    if response.status_code in (301, 302, 303, 307, 308):
-        logger.info(f"Redirect detected: status={response.status_code}, x_forwarded_proto={x_forwarded_proto}")
-        location = response.headers.get("location")
-        logger.info(f"Location header: {location}")
+    try:
+        if response.status_code in (301, 302, 303, 307, 308):
+            logger.info(f"Redirect detected: status={response.status_code}, x_forwarded_proto={x_forwarded_proto}")
+            location = response.headers.get("location")
+            logger.info(f"Location header: {location}")
 
-        if location and location.startswith("http://") and x_forwarded_proto and "https" in x_forwarded_proto.lower():
-            fixed_location = location.replace("http://", "https://", 1)
-            response.headers["location"] = fixed_location
-            logger.info(f"Fixed redirect: {location} -> {fixed_location}")
+            if location and location.startswith("http://") and x_forwarded_proto and "https" in x_forwarded_proto.lower():
+                fixed_location = location.replace("http://", "https://", 1)
+                response.headers["location"] = fixed_location
+                logger.info(f"Fixed redirect: {location} -> {fixed_location}")
+    except Exception as e:
+        logger.error(f"Error fixing redirect: {e}")
 
     return response
 
