@@ -6,8 +6,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models.customer import Customer
-from ..models.contract import ServiceContract
-from ..models.service import ServiceType
+from ..models.service import ServiceContract, ServiceType
 from ..models.user import User, UserRole
 from ..schemas.contract import ContractCreate, ContractResponse
 from ..utils.auth import get_current_user, require_roles
