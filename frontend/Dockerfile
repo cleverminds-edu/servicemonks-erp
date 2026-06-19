@@ -1,5 +1,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
+# Cache bust to force fresh build of HTTPS axios changes
+RUN echo "2026-06-19-0852"
 COPY package*.json ./
 RUN npm ci
 COPY . .
