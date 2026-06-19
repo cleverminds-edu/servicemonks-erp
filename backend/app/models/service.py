@@ -41,8 +41,8 @@ class ServiceContract(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
-    service_type_id = Column(Integer, ForeignKey("service_types.id"), nullable=False)
-    frequency = Column(Enum(ServiceFrequency), nullable=False)
+    service_type_id = Column(Integer, ForeignKey("service_types.id"), nullable=True)
+    frequency = Column(Enum(ServiceFrequency), nullable=True)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date)
     contract_value = Column(Integer)
