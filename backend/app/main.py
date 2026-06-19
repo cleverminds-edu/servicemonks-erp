@@ -51,10 +51,22 @@ app.state.limiter = limiter
 @app.middleware("http")
 async def proxy_headers_middleware(request: Request, call_next):
     # Trust X-Forwarded-Proto and X-Forwarded-Host from nginx proxy
-    if x_forwarded_proto := request.headers.get("x-forwarded-proto"):
-        request.scope["scheme"] = x_forwarded_proto
-    if x_forwarded_host := request.headers.get("x-forwarded-host"):
-        request.scope["server"] = (x_forwarded_host, request.scope.get("server", ("", 80))[1])
+    x_forwarded_proto = request.headers.get("x-forwarded-proto")
+    x_forwarded_host = request.headers.get("x-forwarded-host")
+
+    logger.info(f"Proxy headers - proto: {x_forwarded_proto}, host: {x_forwarded_host}, original scheme: {request.scope.get('scheme')}")
+
+    if x_forwarded_proto:
+        request.scope["scheme"] = x_forwarded_proto.lower()
+        logger.info(f"Set scheme to: {request.scope['scheme']}")
+
+    if x_forwarded_host:
+        # Parse host and port from header
+        host_parts = x_forwarded_host.split(":")
+        port = int(host_parts[1]) if len(host_parts) > 1 else (443 if x_forwarded_proto == "https" else 80)
+        request.scope["server"] = (host_parts[0], port)
+        logger.info(f"Set server to: {request.scope['server']}")
+
     return await call_next(request)
 
 # Security middleware - restrict to allowed origins only
