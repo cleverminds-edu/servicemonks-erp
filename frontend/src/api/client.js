@@ -1,9 +1,8 @@
 import axios from "axios";
 
-// Use HTTPS backend URL directly to avoid proxy issues
+// Use relative path through nginx proxy (same domain, no CORS issues)
 const client = axios.create({
-  baseURL: "https://servicemonks-erp-production.up.railway.app/api/",
-  withCredentials: true,
+  baseURL: "/api/",
 });
 
 client.interceptors.request.use((config) => {
