@@ -141,10 +141,13 @@ export default function Login() {
       markAttendance().catch(err => console.log("Attendance error:", err));
       captureLocation().catch(err => console.log("Location error:", err));
 
-      // Navigate to dashboard (skip password change for now)
-      const dashboardUrl = u.role === "technician" ? "/technician/jobs" : "/manager/dashboard";
-      console.log("Navigating to:", dashboardUrl);
-      navigate(dashboardUrl);
+      if (!u.password_changed) {
+        setLoginUser(u);
+        setNeedsPasswordChange(true);
+      } else {
+        const dashboardUrl = u.role === "technician" ? "/technician/jobs" : "/manager/dashboard";
+        navigate(dashboardUrl);
+      }
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.detail || err.message || "Invalid Employee ID or password. Please try again.");
@@ -157,7 +160,11 @@ export default function Login() {
     return (
       <PasswordChangeModal
         user={loginUser}
-        onSuccess={() => navigate(loginUser.role === "technician" ? "/technician/jobs" : "/manager/dashboard")}
+        onSuccess={() => {
+          const updated = { ...loginUser, password_changed: true };
+          localStorage.setItem("user", JSON.stringify(updated));
+          navigate(loginUser.role === "technician" ? "/technician/jobs" : "/manager/dashboard");
+        }}
       />
     );
   }

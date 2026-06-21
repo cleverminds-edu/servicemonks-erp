@@ -75,7 +75,7 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
             name=user.name,
             role=user.role,
             email=user.email or "",
-            password_changed=False,
+            password_changed=user.password_changed,
         )
         logger.info(f"Step 4 OK: Response built, returning")
         logger.info(f"=== LOGIN SUCCESS: {user.employee_id} ===")
