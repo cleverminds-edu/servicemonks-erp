@@ -222,7 +222,7 @@ def checkin(
 async def submit_job(
     job_id: int,
     body: JobExecutionSubmit,
-    background_tasks,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -287,8 +287,6 @@ async def submit_job(
 
         return {
             "status": "completed",
-            "pdf_path": pdf_path,
-            "email_sent": email_sent,
             "message": "Service completion recorded successfully"
         }
 
